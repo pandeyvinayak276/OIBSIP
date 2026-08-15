@@ -1,20 +1,19 @@
 package com.oibsip.reservation;
 
+import com.oibsip.reservation.db.DatabaseInitializer;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        Label label = new Label("Online Reservation System");
 
-        Scene scene = new Scene(label, 500, 300);
+        DatabaseInitializer.initialize();
 
         stage.setTitle("OIBSIP - Online Reservation System");
-        stage.setScene(scene);
+        stage.setWidth(500);
+        stage.setHeight(300);
         stage.show();
     }
 
