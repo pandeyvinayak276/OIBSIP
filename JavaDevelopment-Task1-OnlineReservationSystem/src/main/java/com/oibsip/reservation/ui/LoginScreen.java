@@ -33,6 +33,9 @@ public class LoginScreen {
         Button loginButton = new Button("Login");
         loginButton.setPrefWidth(280);
 
+        Button registerButton = new Button("Create Account");
+        registerButton.setPrefWidth(180);
+
         Label messageLabel = new Label();
 
         loginButton.setOnAction(event -> {
@@ -49,10 +52,17 @@ public class LoginScreen {
                     userDAO.authenticateUser(username, password);
 
             if (authenticated) {
-                messageLabel.setText("Login successful!");
+                DashboardScreen dashboardScreen = new DashboardScreen();
+                dashboardScreen.show(stage, username);
             } else {
                 messageLabel.setText("Invalid username or password.");
             }
+        });
+
+        registerButton.setOnAction(event -> {
+
+            RegisterScreen registerScreen = new RegisterScreen();
+            registerScreen.show(stage);
         });
 
         VBox layout = new VBox(
@@ -62,6 +72,7 @@ public class LoginScreen {
                 usernameField,
                 passwordField,
                 loginButton,
+                registerButton,
                 messageLabel
         );
 
