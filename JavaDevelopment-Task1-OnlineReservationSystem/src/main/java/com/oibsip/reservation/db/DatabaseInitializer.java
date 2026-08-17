@@ -19,7 +19,11 @@ public class DatabaseInitializer {
         String trainsTable = """
                 CREATE TABLE IF NOT EXISTS trains (
                     train_number INTEGER PRIMARY KEY,
-                    train_name TEXT NOT NULL
+                    train_name TEXT NOT NULL,
+                    source TEXT NOT NULL,
+                    destination TEXT NOT NULL,
+                    departure_time TEXT NOT NULL,
+                    arrival_time TEXT NOT NULL
                 );
                 """;
 
