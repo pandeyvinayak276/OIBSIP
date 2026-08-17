@@ -40,6 +40,11 @@ public class DashboardScreen {
         searchButton.setPrefWidth(180);
         searchButton.setPrefHeight(45);
 
+        searchButton.setOnAction(event -> {
+            SearchTrainsScreen searchTrainsScreen = new SearchTrainsScreen();
+            searchTrainsScreen.show(stage);
+        });
+
         Button bookingsButton = new Button("My Bookings");
         bookingsButton.setPrefWidth(180);
         bookingsButton.setPrefHeight(45);
