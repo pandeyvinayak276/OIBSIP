@@ -1,4 +1,6 @@
 package com.oibsip.reservation;
+
+import com.oibsip.reservation.ui.LoginScreen;
 import com.oibsip.reservation.db.DatabaseInitializer;
 import com.oibsip.reservation.db.DatabaseSeeder;
 import javafx.application.Application;
@@ -12,10 +14,8 @@ public class Main extends Application {
         DatabaseInitializer.initialize();
         DatabaseSeeder.seedTrains();
 
-        stage.setTitle("OIBSIP - Online Reservation System");
-        stage.setWidth(500);
-        stage.setHeight(300);
-        stage.show();
+        LoginScreen loginScreen = new LoginScreen();
+        loginScreen.show(stage);
     }
 
     public static void main(String[] args) {
