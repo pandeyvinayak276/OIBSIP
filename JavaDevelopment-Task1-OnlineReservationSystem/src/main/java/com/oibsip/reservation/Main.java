@@ -13,6 +13,7 @@ public class Main extends Application {
 
         DatabaseInitializer.initialize();
         DatabaseSeeder.seedTrains();
+        DatabaseSeeder.seedTrainClasses();
 
         LoginScreen loginScreen = new LoginScreen();
         loginScreen.show(stage);

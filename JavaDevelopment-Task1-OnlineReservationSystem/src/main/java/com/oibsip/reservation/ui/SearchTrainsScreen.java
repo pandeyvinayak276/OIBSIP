@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -32,23 +33,50 @@ public class SearchTrainsScreen {
 
         Button searchButton = new Button("Search Trains");
 
-        ListView<String> trainListView = new ListView<>();
+        ListView<Train> trainListView = new ListView<>();
 
-        for (Train train : trainDAO.getAllTrains()) {
-
-            String trainInfo =
-                    train.getTrainNumber() + " - " +
-                            train.getTrainName() + " | " +
-                            train.getSource() + " → " +
-                            train.getDestination() + " | " +
-                            train.getDepartureTime() + " - " +
-                            train.getArrivalTime();
-
-            trainListView.getItems().add(trainInfo);
-        }
+        trainListView.getItems().addAll(trainDAO.getAllTrains());
 
         trainListView.setPrefHeight(300);
         trainListView.setPrefWidth(750);
+
+        Button reserveButton = new Button("Reserve Selected Train");
+        reserveButton.setPrefWidth(220);
+        reserveButton.setPrefHeight(40);
+
+        reserveButton.setOnAction(event -> {
+
+            Train selectedTrain =
+                    trainListView.getSelectionModel().getSelectedItem();
+
+            if (selectedTrain == null) {
+                return;
+            }
+
+            ReservationScreen reservationScreen = new ReservationScreen();
+            reservationScreen.show(stage, selectedTrain);
+        });
+
+        trainListView.setCellFactory(listView -> new ListCell<>() {
+
+            @Override
+            protected void updateItem(Train train, boolean empty) {
+                super.updateItem(train, empty);
+
+                if (empty || train == null) {
+                    setText(null);
+                } else {
+                    setText(
+                            train.getTrainNumber() + " - " +
+                                    train.getTrainName() + " | " +
+                                    train.getSource() + " → " +
+                                    train.getDestination() + " | " +
+                                    train.getDepartureTime() + " - " +
+                                    train.getArrivalTime()
+                    );
+                }
+            }
+        });
 
         searchButton.setOnAction(event -> {
 
@@ -68,21 +96,8 @@ public class SearchTrainsScreen {
                                 train.getDestination().equalsIgnoreCase(destination);
 
                 if (sourceMatches && destinationMatches) {
-
-                    String trainInfo =
-                            train.getTrainNumber() + " - " +
-                                    train.getTrainName() + " | " +
-                                    train.getSource() + " → " +
-                                    train.getDestination() + " | " +
-                                    train.getDepartureTime() + " - " +
-                                    train.getArrivalTime();
-
-                    trainListView.getItems().add(trainInfo);
+                    trainListView.getItems().add(train);
                 }
-            }
-
-            if (trainListView.getItems().isEmpty()) {
-                trainListView.getItems().add("No trains found.");
             }
         });
 
@@ -101,7 +116,8 @@ public class SearchTrainsScreen {
         root.getChildren().addAll(
                 titleLabel,
                 searchBox,
-                trainListView
+                trainListView,
+                reserveButton
         );
 
         Scene scene = new Scene(root, 900, 600);

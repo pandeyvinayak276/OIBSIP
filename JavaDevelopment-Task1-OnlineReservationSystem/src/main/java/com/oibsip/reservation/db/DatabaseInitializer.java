@@ -27,6 +27,18 @@ public class DatabaseInitializer {
                 );
                 """;
 
+        String trainClassesTable = """
+                CREATE TABLE IF NOT EXISTS train_classes (
+                    train_number INTEGER NOT NULL,
+                    class_type TEXT NOT NULL,
+                    fare REAL NOT NULL,
+                    total_seats INTEGER NOT NULL,
+                    PRIMARY KEY (train_number, class_type),
+                    FOREIGN KEY (train_number)
+                        REFERENCES trains(train_number)
+                );
+                """;
+
         String reservationsTable = """
                 CREATE TABLE IF NOT EXISTS reservations (
                     pnr TEXT PRIMARY KEY,
@@ -36,7 +48,8 @@ public class DatabaseInitializer {
                     journey_date TEXT NOT NULL,
                     source_station TEXT NOT NULL,
                     destination_station TEXT NOT NULL,
-                    FOREIGN KEY (train_number) REFERENCES trains(train_number)
+                    FOREIGN KEY (train_number)
+                        REFERENCES trains(train_number)
                 );
                 """;
 
@@ -45,7 +58,11 @@ public class DatabaseInitializer {
 
             statement.execute(usersTable);
             statement.execute(trainsTable);
+            statement.execute(trainClassesTable);
             statement.execute(reservationsTable);
+
+            // Upgrade existing reservations table
+            addReservationColumns(connection);
 
             System.out.println("Database initialized successfully.");
 
@@ -53,5 +70,85 @@ public class DatabaseInitializer {
             System.err.println("Database initialization failed.");
             e.printStackTrace();
         }
+    }
+
+    private static void addReservationColumns(Connection connection)
+            throws SQLException {
+
+        try (Statement statement = connection.createStatement()) {
+
+            addColumnIfMissing(
+                    statement,
+                    "reservations",
+                    "passenger_age",
+                    "INTEGER"
+            );
+
+            addColumnIfMissing(
+                    statement,
+                    "reservations",
+                    "gender",
+                    "TEXT"
+            );
+
+            addColumnIfMissing(
+                    statement,
+                    "reservations",
+                    "berth_preference",
+                    "TEXT"
+            );
+
+            addColumnIfMissing(
+                    statement,
+                    "reservations",
+                    "quota",
+                    "TEXT"
+            );
+
+            addColumnIfMissing(
+                    statement,
+                    "reservations",
+                    "fare",
+                    "REAL"
+            );
+
+            addColumnIfMissing(
+                    statement,
+                    "reservations",
+                    "status",
+                    "TEXT DEFAULT 'CONFIRMED'"
+            );
+        }
+    }
+
+    private static void addColumnIfMissing(
+            Statement statement,
+            String tableName,
+            String columnName,
+            String columnDefinition) throws SQLException {
+
+        try (var resultSet = statement.executeQuery(
+                "PRAGMA table_info(" + tableName + ")")) {
+
+            while (resultSet.next()) {
+
+                String existingColumn =
+                        resultSet.getString("name");
+
+                if (existingColumn.equalsIgnoreCase(columnName)) {
+                    return;
+                }
+            }
+        }
+
+        statement.executeUpdate(
+                "ALTER TABLE " + tableName +
+                        " ADD COLUMN " + columnName +
+                        " " + columnDefinition
+        );
+
+        System.out.println(
+                "Added column: " + columnName
+        );
     }
 }
