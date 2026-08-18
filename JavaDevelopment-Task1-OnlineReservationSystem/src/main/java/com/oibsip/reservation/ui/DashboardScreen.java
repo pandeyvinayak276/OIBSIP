@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 public class DashboardScreen {
 
-    public void show(Stage stage, String username){
+    public void show(Stage stage, String username, int userId){
         Label logoLabel = new Label("CROSQ");
         logoLabel.setStyle(
                 "-fx-font-size: 26px;" +
@@ -41,8 +41,15 @@ public class DashboardScreen {
         searchButton.setPrefHeight(45);
 
         searchButton.setOnAction(event -> {
-            SearchTrainsScreen searchTrainsScreen = new SearchTrainsScreen();
-            searchTrainsScreen.show(stage);
+
+            SearchTrainsScreen searchTrainsScreen =
+                    new SearchTrainsScreen();
+
+            searchTrainsScreen.show(
+                    stage,
+                    username,
+                    userId
+            );
         });
 
         Button bookingsButton = new Button("My Bookings");

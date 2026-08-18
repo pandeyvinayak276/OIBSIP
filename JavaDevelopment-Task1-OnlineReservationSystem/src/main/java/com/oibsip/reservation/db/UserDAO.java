@@ -69,4 +69,33 @@ public class UserDAO {
             return false;
         }
     }
+
+    public int getUserId(String username) {
+
+        String sql = """
+            SELECT id
+            FROM users
+            WHERE username = ?
+            """;
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, username);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                if (resultSet.next()) {
+                    return resultSet.getInt("id");
+                }
+
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Failed to fetch user ID.");
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
 }

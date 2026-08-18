@@ -80,6 +80,13 @@ public class DatabaseInitializer {
             addColumnIfMissing(
                     statement,
                     "reservations",
+                    "user_id",
+                    "INTEGER"
+            );
+
+            addColumnIfMissing(
+                    statement,
+                    "reservations",
                     "passenger_age",
                     "INTEGER"
             );

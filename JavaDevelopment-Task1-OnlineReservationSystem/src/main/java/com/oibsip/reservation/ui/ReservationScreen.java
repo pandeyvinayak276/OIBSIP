@@ -1,6 +1,8 @@
 package com.oibsip.reservation.ui;
 
 import com.oibsip.reservation.db.TrainClassDAO;
+import com.oibsip.reservation.db.ReservationDAO;
+import com.oibsip.reservation.util.PNRGenerator;
 import com.oibsip.reservation.model.Train;
 import com.oibsip.reservation.model.TrainClass;
 
@@ -23,7 +25,170 @@ public class ReservationScreen {
 
     private final TrainClassDAO trainClassDAO = new TrainClassDAO();
 
-    public void show(Stage stage, Train train) {
+    private final ReservationDAO reservationDAO = new ReservationDAO();
+
+    private void showError(String message) {
+
+        javafx.scene.control.Alert alert =
+                new javafx.scene.control.Alert(
+                        javafx.scene.control.Alert.AlertType.ERROR
+                );
+
+        alert.setTitle("Crosq");
+        alert.setHeaderText("Booking Error");
+        alert.setContentText(message);
+
+        alert.showAndWait();
+    }
+
+    private void showConfirmation(
+            Stage stage,
+            Train train,
+            String pnr,
+            String passengerName,
+            int age,
+            String gender,
+            LocalDate journeyDate,
+            TrainClass selectedClass,
+            String berthPreference,
+            String quota
+    ) {
+
+        Label titleLabel =
+                new Label("Booking Confirmed ✓");
+
+        titleLabel.setStyle(
+                "-fx-font-size: 28px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        Label pnrLabel =
+                new Label("PNR: " + pnr);
+
+        pnrLabel.setStyle(
+                "-fx-font-size: 18px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        Label trainLabel =
+                new Label(
+                        train.getTrainNumber() +
+                                " - " +
+                                train.getTrainName()
+                );
+
+        Label routeLabel =
+                new Label(
+                        train.getSource() +
+                                " → " +
+                                train.getDestination()
+                );
+
+        Label passengerLabel =
+                new Label(
+                        "Passenger: " +
+                                passengerName
+                );
+
+        Label ageLabel =
+                new Label(
+                        "Age: " + age
+                );
+
+        Label genderLabel =
+                new Label(
+                        "Gender: " + gender
+                );
+
+        Label dateLabel =
+                new Label(
+                        "Journey Date: " +
+                                journeyDate
+                );
+
+        Label classLabel =
+                new Label(
+                        "Class: " +
+                                selectedClass.getClassType()
+                );
+
+        Label fareLabel =
+                new Label(
+                        "Fare: ₹" +
+                                selectedClass.getFare()
+                );
+
+        Label berthLabel =
+                new Label(
+                        "Berth Preference: " +
+                                berthPreference
+                );
+
+        Label quotaLabel =
+                new Label(
+                        "Quota: " +
+                                quota
+                );
+
+        Label statusLabel =
+                new Label(
+                        "Status: CONFIRMED"
+                );
+
+        Button dashboardButton =
+                new Button("Back to Dashboard");
+
+        dashboardButton.setPrefWidth(220);
+        dashboardButton.setPrefHeight(40);
+
+        dashboardButton.setOnAction(event -> {
+
+            DashboardScreen dashboardScreen =
+                    new DashboardScreen();
+
+            // We don't have the username here yet,
+            // so we'll improve this navigation shortly.
+            stage.close();
+        });
+
+        VBox layout =
+                new VBox(
+                        12,
+                        titleLabel,
+                        pnrLabel,
+                        trainLabel,
+                        routeLabel,
+                        passengerLabel,
+                        ageLabel,
+                        genderLabel,
+                        dateLabel,
+                        classLabel,
+                        fareLabel,
+                        berthLabel,
+                        quotaLabel,
+                        statusLabel,
+                        dashboardButton
+                );
+
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(30));
+
+        Scene scene =
+                new Scene(layout, 600, 750);
+
+        stage.setTitle(
+                "Crosq - Booking Confirmation"
+        );
+
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void show(
+            Stage stage,
+            Train train,
+            String username,
+            int userId) {
 
         Label titleLabel = new Label("Book Ticket");
         titleLabel.setStyle(
@@ -237,6 +402,165 @@ public class ReservationScreen {
 
         bookButton.setPrefWidth(220);
         bookButton.setPrefHeight(40);
+
+        bookButton.setOnAction(event -> {
+
+            String passengerName =
+                    passengerField.getText().trim();
+
+            String ageText =
+                    ageField.getText().trim();
+
+            String gender =
+                    genderBox.getValue();
+
+            LocalDate journeyDate =
+                    journeyDatePicker.getValue();
+
+            TrainClass selectedClass =
+                    classBox.getValue();
+
+            String berthPreference =
+                    berthBox.getValue();
+
+            String quota =
+                    quotaBox.getValue();
+
+            // Validate passenger name
+            if (passengerName.isEmpty()) {
+
+                showError(
+                        "Please enter passenger name."
+                );
+
+                return;
+            }
+
+            // Validate age
+            if (ageText.isEmpty()) {
+
+                showError(
+                        "Please enter passenger age."
+                );
+
+                return;
+            }
+
+            int age;
+
+            try {
+
+                age = Integer.parseInt(ageText);
+
+            } catch (NumberFormatException e) {
+
+                showError(
+                        "Age must be a valid number."
+                );
+
+                return;
+            }
+
+            if (age < 1 || age > 120) {
+
+                showError(
+                        "Please enter a valid age."
+                );
+
+                return;
+            }
+
+            // Validate gender
+            if (gender == null) {
+
+                showError(
+                        "Please select gender."
+                );
+
+                return;
+            }
+
+            // Validate journey date
+            if (journeyDate == null) {
+
+                showError(
+                        "Please select journey date."
+                );
+
+                return;
+            }
+
+            // Validate class
+            if (selectedClass == null) {
+
+                showError(
+                        "Please select a class."
+                );
+
+                return;
+            }
+
+            // Check availability
+            boolean available =
+                    reservationDAO.isClassAvailable(
+                            train.getTrainNumber(),
+                            selectedClass.getClassType(),
+                            journeyDate.toString()
+                    );
+
+            if (!available) {
+
+                showError(
+                        "Sorry, this class is currently full."
+                );
+
+                return;
+            }
+
+            // Generate PNR
+            String pnr =
+                    PNRGenerator.generatePNR();
+
+            // Save reservation
+            boolean booked =
+                    reservationDAO.createReservation(
+                            userId,
+                            pnr,
+                            passengerName,
+                            age,
+                            gender,
+                            train.getTrainNumber(),
+                            selectedClass.getClassType(),
+                            journeyDate.toString(),
+                            train.getSource(),
+                            train.getDestination(),
+                            berthPreference,
+                            quota,
+                            selectedClass.getFare()
+                    );
+
+            if (booked) {
+
+                showConfirmation(
+                        stage,
+                        train,
+                        pnr,
+                        passengerName,
+                        age,
+                        gender,
+                        journeyDate,
+                        selectedClass,
+                        berthPreference,
+                        quota
+                );
+
+            } else {
+
+                showError(
+                        "Booking failed. Please try again."
+                );
+            }
+        });
 
         VBox layout = new VBox(
                 10,

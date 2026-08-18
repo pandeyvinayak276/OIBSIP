@@ -52,8 +52,21 @@ public class LoginScreen {
                     userDAO.authenticateUser(username, password);
 
             if (authenticated) {
-                DashboardScreen dashboardScreen = new DashboardScreen();
-                dashboardScreen.show(stage, username);
+                int userId = userDAO.getUserId(username);
+
+                if (userId == -1) {
+                    messageLabel.setText("Unable to load user information.");
+                    return;
+                }
+
+                DashboardScreen dashboardScreen =
+                        new DashboardScreen();
+
+                dashboardScreen.show(
+                        stage,
+                        username,
+                        userId
+                );
             } else {
                 messageLabel.setText("Invalid username or password.");
             }

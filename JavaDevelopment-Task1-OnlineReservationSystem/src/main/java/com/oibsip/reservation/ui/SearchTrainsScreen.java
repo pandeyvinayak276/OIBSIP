@@ -18,7 +18,10 @@ public class SearchTrainsScreen {
 
     private final TrainDAO trainDAO = new TrainDAO();
 
-    public void show(Stage stage) {
+    public void show(
+            Stage stage,
+            String username,
+            int userId) {
 
         Label titleLabel = new Label("Search Trains");
         titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
@@ -53,8 +56,15 @@ public class SearchTrainsScreen {
                 return;
             }
 
-            ReservationScreen reservationScreen = new ReservationScreen();
-            reservationScreen.show(stage, selectedTrain);
+            ReservationScreen reservationScreen =
+                    new ReservationScreen();
+
+            reservationScreen.show(
+                    stage,
+                    selectedTrain,
+                    username,
+                    userId
+            );
         });
 
         trainListView.setCellFactory(listView -> new ListCell<>() {
