@@ -342,8 +342,10 @@ public class ReservationScreen {
         classBox.setOnAction(event -> {
 
             TrainClass selectedClass =
-                    classBox.getSelectionModel()
-                            .getSelectedItem();
+                    classBox.getSelectionModel().getSelectedItem();
+
+            LocalDate journeyDate =
+                    journeyDatePicker.getValue();
 
             if (selectedClass != null) {
 
@@ -352,9 +354,49 @@ public class ReservationScreen {
                                 selectedClass.getFare()
                 );
 
+                if (journeyDate != null) {
+
+                    int availableSeats =
+                            trainClassDAO.getAvailableSeats(
+                                    train.getTrainNumber(),
+                                    selectedClass.getClassType(),
+                                    journeyDate.toString()
+                            );
+
+                    availabilityLabel.setText(
+                            "Available Seats: " +
+                                    availableSeats
+                    );
+
+                } else {
+
+                    availabilityLabel.setText(
+                            "Availability: Select journey date"
+                    );
+                }
+            }
+        });
+
+        journeyDatePicker.setOnAction(event -> {
+
+            TrainClass selectedClass =
+                    classBox.getSelectionModel().getSelectedItem();
+
+            LocalDate journeyDate =
+                    journeyDatePicker.getValue();
+
+            if (selectedClass != null && journeyDate != null) {
+
+                int availableSeats =
+                        trainClassDAO.getAvailableSeats(
+                                train.getTrainNumber(),
+                                selectedClass.getClassType(),
+                                journeyDate.toString()
+                        );
+
                 availabilityLabel.setText(
                         "Available Seats: " +
-                                selectedClass.getAvailableSeats()
+                                availableSeats
                 );
             }
         });

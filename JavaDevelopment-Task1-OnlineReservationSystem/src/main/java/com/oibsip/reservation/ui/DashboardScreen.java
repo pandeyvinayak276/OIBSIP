@@ -56,6 +56,18 @@ public class DashboardScreen {
         bookingsButton.setPrefWidth(180);
         bookingsButton.setPrefHeight(45);
 
+        bookingsButton.setOnAction(event -> {
+
+            MyBookingsScreen myBookingsScreen =
+                    new MyBookingsScreen();
+
+            myBookingsScreen.show(
+                    stage,
+                    username,
+                    userId
+            );
+        });
+
         Button logoutButton = new Button("Logout");
         logoutButton.setPrefWidth(120);
 

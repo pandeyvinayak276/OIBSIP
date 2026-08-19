@@ -1,9 +1,12 @@
 package com.oibsip.reservation.db;
 
+import com.oibsip.reservation.model.Reservation;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReservationDAO {
 
@@ -129,5 +132,116 @@ public class ReservationDAO {
         }
 
         return false;
+    }
+    public List<Reservation>
+    getReservationsByUser(int userId) {
+        List<Reservation> reservations = new ArrayList<>();
+
+        String sql = """
+            SELECT
+                r.pnr,
+                r.passenger_name,
+                r.passenger_age,
+                r.gender,
+                r.train_number,
+                t.train_name,
+                r.class_type,
+                r.journey_date,
+                r.source_station,
+                r.destination_station,
+                r.berth_preference,
+                r.quota,
+                r.fare,
+                r.status
+            FROM reservations r
+            JOIN trains t
+                ON r.train_number = t.train_number
+            WHERE r.user_id = ?
+            ORDER BY r.journey_date DESC
+            """;
+
+        try (Connection connection =
+                     DatabaseConnection.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
+
+                while (resultSet.next()) {
+
+                    Reservation reservation =
+                            new Reservation(
+                                    resultSet.getString("pnr"),
+                                    resultSet.getString("passenger_name"),
+                                    resultSet.getInt("passenger_age"),
+                                    resultSet.getString("gender"),
+                                    resultSet.getInt("train_number"),
+                                    resultSet.getString("train_name"),
+                                    resultSet.getString("class_type"),
+                                    resultSet.getString("journey_date"),
+                                    resultSet.getString("source_station"),
+                                    resultSet.getString("destination_station"),
+                                    resultSet.getString("berth_preference"),
+                                    resultSet.getString("quota"),
+                                    resultSet.getDouble("fare"),
+                                    resultSet.getString("status")
+                            );
+
+                    reservations.add(reservation);
+                }
+
+            }
+
+        } catch (SQLException e) {
+
+            System.err.println(
+                    "Failed to fetch user bookings."
+            );
+
+            e.printStackTrace();
+        }
+
+        return reservations;
+    }
+
+    public boolean cancelReservation(
+            String pnr,
+            int userId
+    ) {
+
+        String sql = """
+            UPDATE reservations
+            SET status = 'CANCELLED'
+            WHERE pnr = ?
+              AND user_id = ?
+              AND status = 'CONFIRMED'
+            """;
+
+        try (Connection connection =
+                     DatabaseConnection.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setString(1, pnr);
+            statement.setInt(2, userId);
+
+            int rowsUpdated =
+                    statement.executeUpdate();
+
+            return rowsUpdated > 0;
+
+        } catch (SQLException e) {
+
+            System.err.println(
+                    "Failed to cancel reservation."
+            );
+
+            e.printStackTrace();
+
+            return false;
+        }
     }
 }
