@@ -5,6 +5,7 @@ import com.oibsip.reservation.model.Train;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Button;
@@ -13,6 +14,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class SearchTrainsScreen {
 
@@ -33,6 +37,22 @@ public class SearchTrainsScreen {
         Label destinationLabel = new Label("To");
         TextField destinationField = new TextField();
         destinationField.setPromptText("Enter destination station");
+
+        Label journeyDateLabel = new Label("Journey Date");
+        DatePicker journeyDatePicker = new DatePicker();
+        journeyDatePicker.setPromptText("Select journey date");
+
+        // Prevent selecting a past date
+        journeyDatePicker.setDayCellFactory(picker -> new javafx.scene.control.DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+
+                if (date.isBefore(LocalDate.now())) {
+                    setDisable(true);
+                }
+            }
+        });
 
         Button searchButton = new Button("Search Trains");
 
@@ -97,6 +117,9 @@ public class SearchTrainsScreen {
             String destination =
                     destinationField.getText().trim();
 
+            LocalDate journeyDate =
+                    journeyDatePicker.getValue();
+
             trainListView.getItems().clear();
             statusLabel.setText("");
 
@@ -104,6 +127,24 @@ public class SearchTrainsScreen {
 
                 statusLabel.setText(
                         "Please enter both source and destination."
+                );
+
+                return;
+            }
+
+            if (journeyDate == null) {
+
+                statusLabel.setText(
+                        "Please select a journey date."
+                );
+
+                return;
+            }
+
+            if (journeyDate.isBefore(LocalDate.now())) {
+
+                statusLabel.setText(
+                        "Journey date cannot be in the past."
                 );
 
                 return;
@@ -122,11 +163,17 @@ public class SearchTrainsScreen {
                 statusLabel.setText(
                         "No trains found for this route."
                 );
+
             } else {
+
+                DateTimeFormatter formatter =
+                        DateTimeFormatter.ofPattern("dd MMM yyyy");
 
                 statusLabel.setText(
                         trains.size() +
-                                " train(s) found."
+                                " train(s) found for " +
+                                journeyDate.format(formatter) +
+                                "."
                 );
             }
         });
@@ -134,10 +181,21 @@ public class SearchTrainsScreen {
         HBox searchBox = new HBox(15);
         searchBox.setAlignment(Pos.CENTER);
 
-        VBox sourceBox = new VBox(5, sourceLabel, sourceField);
-        VBox destinationBox = new VBox(5, destinationLabel, destinationField);
+        VBox sourceBox =
+                new VBox(5, sourceLabel, sourceField);
 
-        searchBox.getChildren().addAll(sourceBox, destinationBox, searchButton);
+        VBox destinationBox =
+                new VBox(5, destinationLabel, destinationField);
+
+        VBox dateBox =
+                new VBox(5, journeyDateLabel, journeyDatePicker);
+
+        searchBox.getChildren().addAll(
+                sourceBox,
+                destinationBox,
+                dateBox,
+                searchButton
+        );
 
         VBox root = new VBox(25);
         root.setAlignment(Pos.TOP_CENTER);
@@ -151,7 +209,7 @@ public class SearchTrainsScreen {
                 reserveButton
         );
 
-        Scene scene = new Scene(root, 900, 600);
+        Scene scene = new Scene(root, 1100, 600);
 
         stage.setTitle("Crosq - Search Trains");
         stage.setScene(scene);
