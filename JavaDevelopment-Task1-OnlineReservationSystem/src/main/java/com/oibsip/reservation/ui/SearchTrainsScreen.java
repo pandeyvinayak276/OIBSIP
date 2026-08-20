@@ -37,6 +37,7 @@ public class SearchTrainsScreen {
         Button searchButton = new Button("Search Trains");
 
         ListView<Train> trainListView = new ListView<>();
+        Label statusLabel = new Label();
 
         trainListView.getItems().addAll(trainDAO.getAllTrains());
 
@@ -90,24 +91,43 @@ public class SearchTrainsScreen {
 
         searchButton.setOnAction(event -> {
 
-            String source = sourceField.getText().trim();
-            String destination = destinationField.getText().trim();
+            String source =
+                    sourceField.getText().trim();
+
+            String destination =
+                    destinationField.getText().trim();
 
             trainListView.getItems().clear();
+            statusLabel.setText("");
 
-            for (Train train : trainDAO.getAllTrains()) {
+            if (source.isEmpty() || destination.isEmpty()) {
 
-                boolean sourceMatches =
-                        source.isEmpty() ||
-                                train.getSource().equalsIgnoreCase(source);
+                statusLabel.setText(
+                        "Please enter both source and destination."
+                );
 
-                boolean destinationMatches =
-                        destination.isEmpty() ||
-                                train.getDestination().equalsIgnoreCase(destination);
+                return;
+            }
 
-                if (sourceMatches && destinationMatches) {
-                    trainListView.getItems().add(train);
-                }
+            var trains =
+                    trainDAO.getTrainsByRoute(
+                            source,
+                            destination
+                    );
+
+            trainListView.getItems().addAll(trains);
+
+            if (trains.isEmpty()) {
+
+                statusLabel.setText(
+                        "No trains found for this route."
+                );
+            } else {
+
+                statusLabel.setText(
+                        trains.size() +
+                                " train(s) found."
+                );
             }
         });
 
@@ -126,6 +146,7 @@ public class SearchTrainsScreen {
         root.getChildren().addAll(
                 titleLabel,
                 searchBox,
+                statusLabel,
                 trainListView,
                 reserveButton
         );
