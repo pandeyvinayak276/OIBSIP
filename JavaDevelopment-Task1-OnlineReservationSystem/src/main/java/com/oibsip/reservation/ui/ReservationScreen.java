@@ -187,6 +187,7 @@ public class ReservationScreen {
     public void show(
             Stage stage,
             Train train,
+            LocalDate journeyDate,
             String username,
             int userId) {
 
@@ -235,7 +236,7 @@ public class ReservationScreen {
         // Journey Date
         Label dateLabel = new Label("Journey Date");
 
-        DatePicker journeyDatePicker = new DatePicker();
+        DatePicker journeyDatePicker = new DatePicker(journeyDate);
 
         journeyDatePicker.setDayCellFactory(
                 picker -> new DateCell() {
@@ -344,7 +345,7 @@ public class ReservationScreen {
             TrainClass selectedClass =
                     classBox.getSelectionModel().getSelectedItem();
 
-            LocalDate journeyDate =
+            LocalDate selectedJourneyDate =
                     journeyDatePicker.getValue();
 
             if (selectedClass != null) {
@@ -354,13 +355,13 @@ public class ReservationScreen {
                                 selectedClass.getFare()
                 );
 
-                if (journeyDate != null) {
+                if (selectedJourneyDate != null) {
 
                     int availableSeats =
                             trainClassDAO.getAvailableSeats(
                                     train.getTrainNumber(),
                                     selectedClass.getClassType(),
-                                    journeyDate.toString()
+                                    selectedJourneyDate.toString()
                             );
 
                     availabilityLabel.setText(
@@ -382,16 +383,16 @@ public class ReservationScreen {
             TrainClass selectedClass =
                     classBox.getSelectionModel().getSelectedItem();
 
-            LocalDate journeyDate =
+            LocalDate selectedJourneyDate =
                     journeyDatePicker.getValue();
 
-            if (selectedClass != null && journeyDate != null) {
+            if (selectedClass != null && selectedJourneyDate != null) {
 
                 int availableSeats =
                         trainClassDAO.getAvailableSeats(
                                 train.getTrainNumber(),
                                 selectedClass.getClassType(),
-                                journeyDate.toString()
+                                selectedJourneyDate.toString()
                         );
 
                 availabilityLabel.setText(
@@ -456,7 +457,7 @@ public class ReservationScreen {
             String gender =
                     genderBox.getValue();
 
-            LocalDate journeyDate =
+            LocalDate selectedJourneyDate =
                     journeyDatePicker.getValue();
 
             TrainClass selectedClass =
@@ -523,7 +524,7 @@ public class ReservationScreen {
             }
 
             // Validate journey date
-            if (journeyDate == null) {
+            if (selectedJourneyDate == null) {
 
                 showError(
                         "Please select journey date."
@@ -547,7 +548,7 @@ public class ReservationScreen {
                     reservationDAO.isClassAvailable(
                             train.getTrainNumber(),
                             selectedClass.getClassType(),
-                            journeyDate.toString()
+                            selectedJourneyDate.toString()
                     );
 
             if (!available) {
@@ -573,7 +574,7 @@ public class ReservationScreen {
                             gender,
                             train.getTrainNumber(),
                             selectedClass.getClassType(),
-                            journeyDate.toString(),
+                            selectedJourneyDate.toString(),
                             train.getSource(),
                             train.getDestination(),
                             berthPreference,
@@ -590,7 +591,7 @@ public class ReservationScreen {
                         passengerName,
                         age,
                         gender,
-                        journeyDate,
+                        selectedJourneyDate,
                         selectedClass,
                         berthPreference,
                         quota

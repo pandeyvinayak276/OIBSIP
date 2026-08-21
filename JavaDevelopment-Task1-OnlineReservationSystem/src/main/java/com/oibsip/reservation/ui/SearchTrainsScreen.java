@@ -5,11 +5,12 @@ import com.oibsip.reservation.model.Train;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.Button;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -28,52 +29,88 @@ public class SearchTrainsScreen {
             int userId) {
 
         Label titleLabel = new Label("Search Trains");
-        titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+        titleLabel.setStyle(
+                "-fx-font-size: 28px; -fx-font-weight: bold;"
+        );
 
         Label sourceLabel = new Label("From");
+
         TextField sourceField = new TextField();
         sourceField.setPromptText("Enter source station");
 
         Label destinationLabel = new Label("To");
+
         TextField destinationField = new TextField();
         destinationField.setPromptText("Enter destination station");
 
+        // Journey Date
         Label journeyDateLabel = new Label("Journey Date");
+
         DatePicker journeyDatePicker = new DatePicker();
         journeyDatePicker.setPromptText("Select journey date");
 
         // Prevent selecting a past date
-        journeyDatePicker.setDayCellFactory(picker -> new javafx.scene.control.DateCell() {
-            @Override
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
+        journeyDatePicker.setDayCellFactory(
+                picker -> new DateCell() {
 
-                if (date.isBefore(LocalDate.now())) {
-                    setDisable(true);
+                    @Override
+                    public void updateItem(
+                            LocalDate date,
+                            boolean empty) {
+
+                        super.updateItem(date, empty);
+
+                        if (!empty &&
+                                date.isBefore(LocalDate.now())) {
+
+                            setDisable(true);
+                        }
+                    }
                 }
-            }
-        });
+        );
 
-        Button searchButton = new Button("Search Trains");
+        Button searchButton =
+                new Button("Search Trains");
 
-        ListView<Train> trainListView = new ListView<>();
-        Label statusLabel = new Label();
+        ListView<Train> trainListView =
+                new ListView<>();
 
-        trainListView.getItems().addAll(trainDAO.getAllTrains());
+        Label statusLabel =
+                new Label();
+
+        // Show all trains initially
+        trainListView.getItems().addAll(
+                trainDAO.getAllTrains()
+        );
 
         trainListView.setPrefHeight(300);
         trainListView.setPrefWidth(750);
 
-        Button reserveButton = new Button("Reserve Selected Train");
+        // Reserve button
+        Button reserveButton =
+                new Button("Reserve Selected Train");
+
         reserveButton.setPrefWidth(220);
         reserveButton.setPrefHeight(40);
 
         reserveButton.setOnAction(event -> {
 
             Train selectedTrain =
-                    trainListView.getSelectionModel().getSelectedItem();
+                    trainListView
+                            .getSelectionModel()
+                            .getSelectedItem();
+
+            LocalDate selectedJourneyDate =
+                    journeyDatePicker.getValue();
 
             if (selectedTrain == null) {
+                return;
+            }
+
+            if (selectedJourneyDate == null) {
+                statusLabel.setText(
+                        "Please select a journey date."
+                );
                 return;
             }
 
@@ -83,32 +120,48 @@ public class SearchTrainsScreen {
             reservationScreen.show(
                     stage,
                     selectedTrain,
+                    selectedJourneyDate,
                     username,
                     userId
             );
         });
 
-        trainListView.setCellFactory(listView -> new ListCell<>() {
+        // Train list display
+        trainListView.setCellFactory(
+                listView -> new ListCell<>() {
 
-            @Override
-            protected void updateItem(Train train, boolean empty) {
-                super.updateItem(train, empty);
+                    @Override
+                    protected void updateItem(
+                            Train train,
+                            boolean empty) {
 
-                if (empty || train == null) {
-                    setText(null);
-                } else {
-                    setText(
-                            train.getTrainNumber() + " - " +
-                                    train.getTrainName() + " | " +
-                                    train.getSource() + " → " +
-                                    train.getDestination() + " | " +
-                                    train.getDepartureTime() + " - " +
-                                    train.getArrivalTime()
-                    );
+                        super.updateItem(train, empty);
+
+                        if (empty || train == null) {
+
+                            setText(null);
+
+                        } else {
+
+                            setText(
+                                    train.getTrainNumber() +
+                                            " - " +
+                                            train.getTrainName() +
+                                            " | " +
+                                            train.getSource() +
+                                            " → " +
+                                            train.getDestination() +
+                                            " | " +
+                                            train.getDepartureTime() +
+                                            " - " +
+                                            train.getArrivalTime()
+                            );
+                        }
+                    }
                 }
-            }
-        });
+        );
 
+        // Search button
         searchButton.setOnAction(event -> {
 
             String source =
@@ -121,9 +174,12 @@ public class SearchTrainsScreen {
                     journeyDatePicker.getValue();
 
             trainListView.getItems().clear();
+
             statusLabel.setText("");
 
-            if (source.isEmpty() || destination.isEmpty()) {
+            // Validate source and destination
+            if (source.isEmpty() ||
+                    destination.isEmpty()) {
 
                 statusLabel.setText(
                         "Please enter both source and destination."
@@ -132,6 +188,7 @@ public class SearchTrainsScreen {
                 return;
             }
 
+            // Validate journey date
             if (journeyDate == null) {
 
                 statusLabel.setText(
@@ -141,7 +198,9 @@ public class SearchTrainsScreen {
                 return;
             }
 
-            if (journeyDate.isBefore(LocalDate.now())) {
+            // Prevent past date
+            if (journeyDate.isBefore(
+                    LocalDate.now())) {
 
                 statusLabel.setText(
                         "Journey date cannot be in the past."
@@ -150,13 +209,16 @@ public class SearchTrainsScreen {
                 return;
             }
 
+            // Search trains
             var trains =
                     trainDAO.getTrainsByRoute(
                             source,
                             destination
                     );
 
-            trainListView.getItems().addAll(trains);
+            trainListView
+                    .getItems()
+                    .addAll(trains);
 
             if (trains.isEmpty()) {
 
@@ -167,7 +229,9 @@ public class SearchTrainsScreen {
             } else {
 
                 DateTimeFormatter formatter =
-                        DateTimeFormatter.ofPattern("dd MMM yyyy");
+                        DateTimeFormatter.ofPattern(
+                                "dd MMM yyyy"
+                        );
 
                 statusLabel.setText(
                         trains.size() +
@@ -178,17 +242,34 @@ public class SearchTrainsScreen {
             }
         });
 
-        HBox searchBox = new HBox(15);
-        searchBox.setAlignment(Pos.CENTER);
+        // Search layout
+        HBox searchBox =
+                new HBox(15);
+
+        searchBox.setAlignment(
+                Pos.CENTER
+        );
 
         VBox sourceBox =
-                new VBox(5, sourceLabel, sourceField);
+                new VBox(
+                        5,
+                        sourceLabel,
+                        sourceField
+                );
 
         VBox destinationBox =
-                new VBox(5, destinationLabel, destinationField);
+                new VBox(
+                        5,
+                        destinationLabel,
+                        destinationField
+                );
 
         VBox dateBox =
-                new VBox(5, journeyDateLabel, journeyDatePicker);
+                new VBox(
+                        5,
+                        journeyDateLabel,
+                        journeyDatePicker
+                );
 
         searchBox.getChildren().addAll(
                 sourceBox,
@@ -197,9 +278,17 @@ public class SearchTrainsScreen {
                 searchButton
         );
 
-        VBox root = new VBox(25);
-        root.setAlignment(Pos.TOP_CENTER);
-        root.setPadding(new Insets(40));
+        // Main layout
+        VBox root =
+                new VBox(25);
+
+        root.setAlignment(
+                Pos.TOP_CENTER
+        );
+
+        root.setPadding(
+                new Insets(40)
+        );
 
         root.getChildren().addAll(
                 titleLabel,
@@ -209,9 +298,17 @@ public class SearchTrainsScreen {
                 reserveButton
         );
 
-        Scene scene = new Scene(root, 1100, 600);
+        Scene scene =
+                new Scene(
+                        root,
+                        1100,
+                        600
+                );
 
-        stage.setTitle("Crosq - Search Trains");
+        stage.setTitle(
+                "Crosq - Search Trains"
+        );
+
         stage.setScene(scene);
         stage.show();
     }
