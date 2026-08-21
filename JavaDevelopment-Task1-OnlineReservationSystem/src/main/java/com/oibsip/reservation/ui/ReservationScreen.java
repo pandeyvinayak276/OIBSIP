@@ -1,20 +1,22 @@
 package com.oibsip.reservation.ui;
 
-import com.oibsip.reservation.db.TrainClassDAO;
 import com.oibsip.reservation.db.ReservationDAO;
-import com.oibsip.reservation.util.PNRGenerator;
+import com.oibsip.reservation.db.TrainClassDAO;
 import com.oibsip.reservation.model.Train;
 import com.oibsip.reservation.model.TrainClass;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -24,164 +26,17 @@ import java.util.List;
 public class ReservationScreen {
 
     private final TrainClassDAO trainClassDAO = new TrainClassDAO();
-
     private final ReservationDAO reservationDAO = new ReservationDAO();
 
     private void showError(String message) {
 
-        javafx.scene.control.Alert alert =
-                new javafx.scene.control.Alert(
-                        javafx.scene.control.Alert.AlertType.ERROR
-                );
+        Alert alert = new Alert(Alert.AlertType.ERROR);
 
         alert.setTitle("Crosq");
         alert.setHeaderText("Booking Error");
         alert.setContentText(message);
 
         alert.showAndWait();
-    }
-
-    private void showConfirmation(
-            Stage stage,
-            Train train,
-            String pnr,
-            String passengerName,
-            int age,
-            String gender,
-            LocalDate journeyDate,
-            TrainClass selectedClass,
-            String berthPreference,
-            String quota
-    ) {
-
-        Label titleLabel =
-                new Label("Booking Confirmed ✓");
-
-        titleLabel.setStyle(
-                "-fx-font-size: 28px;" +
-                        "-fx-font-weight: bold;"
-        );
-
-        Label pnrLabel =
-                new Label("PNR: " + pnr);
-
-        pnrLabel.setStyle(
-                "-fx-font-size: 18px;" +
-                        "-fx-font-weight: bold;"
-        );
-
-        Label trainLabel =
-                new Label(
-                        train.getTrainNumber() +
-                                " - " +
-                                train.getTrainName()
-                );
-
-        Label routeLabel =
-                new Label(
-                        train.getSource() +
-                                " → " +
-                                train.getDestination()
-                );
-
-        Label passengerLabel =
-                new Label(
-                        "Passenger: " +
-                                passengerName
-                );
-
-        Label ageLabel =
-                new Label(
-                        "Age: " + age
-                );
-
-        Label genderLabel =
-                new Label(
-                        "Gender: " + gender
-                );
-
-        Label dateLabel =
-                new Label(
-                        "Journey Date: " +
-                                journeyDate
-                );
-
-        Label classLabel =
-                new Label(
-                        "Class: " +
-                                selectedClass.getClassType()
-                );
-
-        Label fareLabel =
-                new Label(
-                        "Fare: ₹" +
-                                selectedClass.getFare()
-                );
-
-        Label berthLabel =
-                new Label(
-                        "Berth Preference: " +
-                                berthPreference
-                );
-
-        Label quotaLabel =
-                new Label(
-                        "Quota: " +
-                                quota
-                );
-
-        Label statusLabel =
-                new Label(
-                        "Status: CONFIRMED"
-                );
-
-        Button dashboardButton =
-                new Button("Back to Dashboard");
-
-        dashboardButton.setPrefWidth(220);
-        dashboardButton.setPrefHeight(40);
-
-        dashboardButton.setOnAction(event -> {
-
-            DashboardScreen dashboardScreen =
-                    new DashboardScreen();
-
-            // We don't have the username here yet,
-            // so we'll improve this navigation shortly.
-            stage.close();
-        });
-
-        VBox layout =
-                new VBox(
-                        12,
-                        titleLabel,
-                        pnrLabel,
-                        trainLabel,
-                        routeLabel,
-                        passengerLabel,
-                        ageLabel,
-                        genderLabel,
-                        dateLabel,
-                        classLabel,
-                        fareLabel,
-                        berthLabel,
-                        quotaLabel,
-                        statusLabel,
-                        dashboardButton
-                );
-
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(30));
-
-        Scene scene =
-                new Scene(layout, 600, 750);
-
-        stage.setTitle(
-                "Crosq - Booking Confirmation"
-        );
-
-        stage.setScene(scene);
-        stage.show();
     }
 
     public void show(
@@ -192,6 +47,7 @@ public class ReservationScreen {
             int userId) {
 
         Label titleLabel = new Label("Book Ticket");
+
         titleLabel.setStyle(
                 "-fx-font-size: 26px;" +
                         "-fx-font-weight: bold;"
@@ -225,18 +81,21 @@ public class ReservationScreen {
         Label genderLabel = new Label("Gender");
 
         ComboBox<String> genderBox = new ComboBox<>();
+
         genderBox.getItems().addAll(
                 "Male",
                 "Female",
                 "Other"
         );
+
         genderBox.setPromptText("Select gender");
         genderBox.setMaxWidth(300);
 
         // Journey Date
         Label dateLabel = new Label("Journey Date");
 
-        DatePicker journeyDatePicker = new DatePicker(journeyDate);
+        DatePicker journeyDatePicker =
+                new DatePicker(journeyDate);
 
         journeyDatePicker.setDayCellFactory(
                 picker -> new DateCell() {
@@ -262,7 +121,8 @@ public class ReservationScreen {
         // Class
         Label classLabel = new Label("Class");
 
-        ComboBox<TrainClass> classBox = new ComboBox<>();
+        ComboBox<TrainClass> classBox =
+                new ComboBox<>();
 
         classBox.setPromptText("Select class");
         classBox.setMaxWidth(300);
@@ -275,7 +135,7 @@ public class ReservationScreen {
         classBox.getItems().addAll(trainClasses);
 
         classBox.setCellFactory(
-                listView -> new javafx.scene.control.ListCell<>() {
+                listView -> new ListCell<>() {
 
                     @Override
                     protected void updateItem(
@@ -306,7 +166,7 @@ public class ReservationScreen {
         );
 
         classBox.setButtonCell(
-                new javafx.scene.control.ListCell<>() {
+                new ListCell<>() {
 
                     @Override
                     protected void updateItem(
@@ -335,7 +195,8 @@ public class ReservationScreen {
         );
 
         // Fare and availability
-        Label fareLabel = new Label("Fare: -");
+        Label fareLabel =
+                new Label("Fare: -");
 
         Label availabilityLabel =
                 new Label("Availability: -");
@@ -343,7 +204,8 @@ public class ReservationScreen {
         classBox.setOnAction(event -> {
 
             TrainClass selectedClass =
-                    classBox.getSelectionModel().getSelectedItem();
+                    classBox.getSelectionModel()
+                            .getSelectedItem();
 
             LocalDate selectedJourneyDate =
                     journeyDatePicker.getValue();
@@ -381,12 +243,14 @@ public class ReservationScreen {
         journeyDatePicker.setOnAction(event -> {
 
             TrainClass selectedClass =
-                    classBox.getSelectionModel().getSelectedItem();
+                    classBox.getSelectionModel()
+                            .getSelectedItem();
 
             LocalDate selectedJourneyDate =
                     journeyDatePicker.getValue();
 
-            if (selectedClass != null && selectedJourneyDate != null) {
+            if (selectedClass != null &&
+                    selectedJourneyDate != null) {
 
                 int availableSeats =
                         trainClassDAO.getAvailableSeats(
@@ -439,14 +303,14 @@ public class ReservationScreen {
         quotaBox.setValue("General");
         quotaBox.setMaxWidth(300);
 
-        // Book button
-        Button bookButton =
-                new Button("Book Ticket");
+        // Review button
+        Button reviewButton =
+                new Button("Review Booking");
 
-        bookButton.setPrefWidth(220);
-        bookButton.setPrefHeight(40);
+        reviewButton.setPrefWidth(220);
+        reviewButton.setPrefHeight(40);
 
-        bookButton.setOnAction(event -> {
+        reviewButton.setOnAction(event -> {
 
             String passengerName =
                     passengerField.getText().trim();
@@ -543,7 +407,7 @@ public class ReservationScreen {
                 return;
             }
 
-            // Check availability
+            // Check availability before review
             boolean available =
                     reservationDAO.isClassAvailable(
                             train.getTrainNumber(),
@@ -560,49 +424,29 @@ public class ReservationScreen {
                 return;
             }
 
-            // Generate PNR
-            String pnr =
-                    PNRGenerator.generatePNR();
+            /*
+             * Create the review screen.
+             *
+             * IMPORTANT:
+             * No reservation is saved here.
+             * No PNR is generated here.
+             */
+            ReviewBookingScreen reviewBookingScreen =
+                    new ReviewBookingScreen();
 
-            // Save reservation
-            boolean booked =
-                    reservationDAO.createReservation(
-                            userId,
-                            pnr,
-                            passengerName,
-                            age,
-                            gender,
-                            train.getTrainNumber(),
-                            selectedClass.getClassType(),
-                            selectedJourneyDate.toString(),
-                            train.getSource(),
-                            train.getDestination(),
-                            berthPreference,
-                            quota,
-                            selectedClass.getFare()
-                    );
-
-            if (booked) {
-
-                showConfirmation(
-                        stage,
-                        train,
-                        pnr,
-                        passengerName,
-                        age,
-                        gender,
-                        selectedJourneyDate,
-                        selectedClass,
-                        berthPreference,
-                        quota
-                );
-
-            } else {
-
-                showError(
-                        "Booking failed. Please try again."
-                );
-            }
+            reviewBookingScreen.show(
+                    stage,
+                    train,
+                    passengerName,
+                    age,
+                    gender,
+                    selectedJourneyDate,
+                    selectedClass,
+                    berthPreference,
+                    quota,
+                    username,
+                    userId
+            );
         });
 
         VBox layout = new VBox(
@@ -637,7 +481,7 @@ public class ReservationScreen {
                 quotaLabel,
                 quotaBox,
 
-                bookButton
+                reviewButton
         );
 
         layout.setAlignment(Pos.CENTER);
