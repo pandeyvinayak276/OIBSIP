@@ -431,38 +431,131 @@ public class PaymentScreen {
             String berthPreference,
             String quota) {
 
-        Label titleLabel =
-                new Label("Booking Confirmed ✓");
+        // ===== Crosq E-Ticket Header =====
 
-        titleLabel.setStyle(
-                "-fx-font-size: 28px;" +
+        Label crosqLabel =
+                new Label("CROSQ");
+
+        crosqLabel.setStyle(
+                "-fx-font-size: 30px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        Label ticketLabel =
+                new Label("E-TICKET");
+
+        ticketLabel.setStyle(
+                "-fx-font-size: 16px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        VBox header =
+                new VBox(
+                        3,
+                        crosqLabel,
+                        ticketLabel
+                );
+
+        header.setAlignment(Pos.CENTER);
+
+        // ===== Booking Status =====
+
+        Label statusLabel =
+                new Label("✓  BOOKING CONFIRMED");
+
+        statusLabel.setStyle(
+                "-fx-font-size: 17px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 8 15 8 15;" +
+                        "-fx-border-color: green;" +
+                        "-fx-border-radius: 5;" +
+                        "-fx-background-radius: 5;"
+        );
+
+        // ===== PNR =====
+
+        Label pnrCaption =
+                new Label("PNR NUMBER");
+
+        pnrCaption.setStyle(
+                "-fx-font-size: 11px;" +
                         "-fx-font-weight: bold;"
         );
 
         Label pnrLabel =
-                new Label(
-                        "PNR: " +
-                                pnr
-                );
+                new Label(pnr);
 
         pnrLabel.setStyle(
-                "-fx-font-size: 18px;" +
+                "-fx-font-size: 22px;" +
                         "-fx-font-weight: bold;"
         );
+
+        VBox pnrBox =
+                new VBox(
+                        3,
+                        pnrCaption,
+                        pnrLabel
+                );
+
+        pnrBox.setAlignment(Pos.CENTER);
+
+        // ===== Train Details =====
 
         Label trainLabel =
                 new Label(
                         train.getTrainNumber() +
-                                " - " +
+                                "  •  " +
                                 train.getTrainName()
                 );
 
-        Label routeLabel =
-                new Label(
-                        train.getSource() +
-                                " → " +
-                                train.getDestination()
+        trainLabel.setStyle(
+                "-fx-font-size: 18px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        Label sourceLabel =
+                new Label(train.getSource());
+
+        sourceLabel.setStyle(
+                "-fx-font-size: 16px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        Label arrowLabel =
+                new Label("→");
+
+        arrowLabel.setStyle(
+                "-fx-font-size: 22px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        Label destinationLabel =
+                new Label(train.getDestination());
+
+        destinationLabel.setStyle(
+                "-fx-font-size: 16px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        javafx.scene.layout.HBox routeBox =
+                new javafx.scene.layout.HBox(
+                        15,
+                        sourceLabel,
+                        arrowLabel,
+                        destinationLabel
                 );
+
+        routeBox.setAlignment(Pos.CENTER);
+
+        // ===== Passenger Details =====
+
+        Label passengerHeading =
+                new Label("PASSENGER DETAILS");
+
+        passengerHeading.setStyle(
+                "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;"
+        );
 
         Label passengerLabel =
                 new Label(
@@ -470,17 +563,35 @@ public class PaymentScreen {
                                 passengerName
                 );
 
-        Label ageLabel =
+        Label ageGenderLabel =
                 new Label(
                         "Age: " +
-                                age
-                );
-
-        Label genderLabel =
-                new Label(
-                        "Gender: " +
+                                age +
+                                "    |    Gender: " +
                                 gender
                 );
+
+        VBox passengerBox =
+                new VBox(
+                        6,
+                        passengerHeading,
+                        passengerLabel,
+                        ageGenderLabel
+                );
+
+        passengerBox.setPadding(
+                new Insets(10)
+        );
+
+        // ===== Journey Details =====
+
+        Label journeyHeading =
+                new Label("JOURNEY DETAILS");
+
+        journeyHeading.setStyle(
+                "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;"
+        );
 
         Label dateLabel =
                 new Label(
@@ -492,12 +603,6 @@ public class PaymentScreen {
                 new Label(
                         "Class: " +
                                 selectedClass.getClassType()
-                );
-
-        Label fareLabel =
-                new Label(
-                        "Fare: ₹" +
-                                selectedClass.getFare()
                 );
 
         Label berthLabel =
@@ -512,14 +617,81 @@ public class PaymentScreen {
                                 quota
                 );
 
-        Label statusLabel =
-                new Label(
-                        "Status: CONFIRMED"
+        VBox journeyBox =
+                new VBox(
+                        6,
+                        journeyHeading,
+                        dateLabel,
+                        classLabel,
+                        berthLabel,
+                        quotaLabel
                 );
 
-        statusLabel.setStyle(
-                "-fx-font-weight: bold;"
+        journeyBox.setPadding(
+                new Insets(10)
         );
+
+        // ===== Fare =====
+
+        Label fareCaption =
+                new Label("TOTAL FARE");
+
+        fareCaption.setStyle(
+                "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        Label fareLabel =
+                new Label(
+                        "₹" +
+                                selectedClass.getFare()
+                );
+
+        fareLabel.setStyle(
+                "-fx-font-size: 22px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        VBox fareBox =
+                new VBox(
+                        3,
+                        fareCaption,
+                        fareLabel
+                );
+
+        fareBox.setAlignment(Pos.CENTER_RIGHT);
+
+        // ===== Ticket Content =====
+
+        VBox ticket =
+                new VBox(
+                        14,
+                        header,
+                        statusLabel,
+                        pnrBox,
+                        trainLabel,
+                        routeBox,
+                        passengerBox,
+                        journeyBox,
+                        fareBox
+                );
+
+        ticket.setAlignment(Pos.CENTER);
+        ticket.setPadding(
+                new Insets(25)
+        );
+
+        ticket.setMaxWidth(500);
+
+        ticket.setStyle(
+                "-fx-border-color: #999999;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-background-color: white;" +
+                        "-fx-background-radius: 10;"
+        );
+
+        // ===== Back Button =====
 
         Button dashboardButton =
                 new Button("Back to Dashboard");
@@ -531,40 +703,33 @@ public class PaymentScreen {
                 stage.close()
         );
 
+        // ===== Main Layout =====
+
         VBox layout =
                 new VBox(
-                        12,
-
-                        titleLabel,
-                        pnrLabel,
-
-                        trainLabel,
-                        routeLabel,
-
-                        passengerLabel,
-                        ageLabel,
-                        genderLabel,
-
-                        dateLabel,
-
-                        classLabel,
-                        fareLabel,
-                        berthLabel,
-                        quotaLabel,
-
-                        statusLabel,
-
+                        20,
+                        ticket,
                         dashboardButton
                 );
 
         layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(30));
+        layout.setPadding(
+                new Insets(25)
+        );
+
+        layout.setStyle(
+                "-fx-background-color: #f4f6f8;"
+        );
 
         Scene scene =
-                new Scene(layout, 600, 750);
+                new Scene(
+                        layout,
+                        650,
+                        850
+                );
 
         stage.setTitle(
-                "Crosq - Booking Confirmation"
+                "Crosq - E-Ticket"
         );
 
         stage.setScene(scene);
