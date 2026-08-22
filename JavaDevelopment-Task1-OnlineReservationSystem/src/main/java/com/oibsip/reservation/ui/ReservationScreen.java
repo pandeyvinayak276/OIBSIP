@@ -343,6 +343,18 @@ public class ReservationScreen {
                 return;
             }
 
+            if (!passengerName.matches(
+                    "[a-zA-Z][a-zA-Z .'-]{1,49}"
+            )) {
+
+                showError(
+                        "Passenger name must contain only letters, spaces, " +
+                                "and common name characters."
+                );
+
+                return;
+            }
+
             // Validate age
             if (ageText.isEmpty()) {
 
@@ -392,6 +404,15 @@ public class ReservationScreen {
 
                 showError(
                         "Please select journey date."
+                );
+
+                return;
+            }
+
+            if (selectedJourneyDate.isBefore(LocalDate.now())) {
+
+                showError(
+                        "Journey date cannot be in the past."
                 );
 
                 return;
