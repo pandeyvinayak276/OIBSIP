@@ -37,17 +37,20 @@ public class SearchTrainsScreen {
 
         TextField sourceField = new TextField();
         sourceField.setPromptText("Enter source station");
+        sourceField.setPrefWidth(200);
 
         Label destinationLabel = new Label("To");
 
         TextField destinationField = new TextField();
         destinationField.setPromptText("Enter destination station");
+        destinationField.setPrefWidth(200);
 
         // Journey Date
         Label journeyDateLabel = new Label("Journey Date");
 
         DatePicker journeyDatePicker = new DatePicker();
         journeyDatePicker.setPromptText("Select journey date");
+        journeyDatePicker.setPrefWidth(200);
 
         // Prevent selecting a past date
         journeyDatePicker.setDayCellFactory(
@@ -242,13 +245,10 @@ public class SearchTrainsScreen {
             }
         });
 
-        // Search layout
         HBox searchBox =
                 new HBox(15);
 
-        searchBox.setAlignment(
-                Pos.CENTER
-        );
+        searchBox.setAlignment(Pos.BOTTOM_CENTER);
 
         VBox sourceBox =
                 new VBox(

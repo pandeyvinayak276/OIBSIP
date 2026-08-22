@@ -69,50 +69,6 @@ public class MyBookingsScreen {
 
                         } else {
 
-                            Label bookingLabel =
-                                    new Label(
-                                            "PNR: " +
-                                                    reservation.getPnr() +
-                                                    "\n" +
-
-                                                    reservation.getTrainNumber() +
-                                                    " - " +
-                                                    reservation.getTrainName() +
-                                                    "\n" +
-
-                                                    reservation.getSourceStation() +
-                                                    " → " +
-                                                    reservation.getDestinationStation() +
-                                                    "\n" +
-
-                                                    "Passenger: " +
-                                                    reservation.getPassengerName() +
-                                                    " | Age: " +
-                                                    reservation.getPassengerAge() +
-                                                    " | " +
-                                                    reservation.getGender() +
-                                                    "\n" +
-
-                                                    "Date: " +
-                                                    reservation.getJourneyDate() +
-                                                    " | Class: " +
-                                                    reservation.getClassType() +
-                                                    "\n" +
-
-                                                    "Berth: " +
-                                                    reservation.getBerthPreference() +
-                                                    " | Quota: " +
-                                                    reservation.getQuota() +
-                                                    "\n" +
-
-                                                    "Fare: ₹" +
-                                                    reservation.getFare() +
-                                                    " | Status: " +
-                                                    reservation.getStatus()
-                                    );
-
-                            bookingLabel.setWrapText(true);
-
                             VBox bookingLayout =
                                     new VBox(8);
 
@@ -120,8 +76,108 @@ public class MyBookingsScreen {
                                     new Insets(10)
                             );
 
-                            bookingLayout.getChildren().add(
-                                    bookingLabel
+// PNR - important
+                            Label pnrLabel =
+                                    new Label(
+                                            "PNR: " + reservation.getPnr()
+                                    );
+
+                            pnrLabel.setStyle(
+                                    "-fx-font-weight: bold;" +
+                                            "-fx-font-size: 15px;"
+                            );
+
+// Train - important
+                            Label trainLabel =
+                                    new Label(
+                                            reservation.getTrainNumber() +
+                                                    " - " +
+                                                    reservation.getTrainName()
+                                    );
+
+                            trainLabel.setStyle(
+                                    "-fx-font-weight: bold;" +
+                                            "-fx-font-size: 14px;"
+                            );
+
+// Route
+                            Label routeLabel =
+                                    new Label(
+                                            reservation.getSourceStation() +
+                                                    " → " +
+                                                    reservation.getDestinationStation()
+                                    );
+
+// Passenger
+                            Label passengerLabel =
+                                    new Label(
+                                            "Passenger: " +
+                                                    reservation.getPassengerName()
+                                    );
+
+                            passengerLabel.setStyle(
+                                    "-fx-font-weight: bold;"
+                            );
+
+// Age + Gender - normal
+                            Label passengerDetailsLabel =
+                                    new Label(
+                                            "Age: " +
+                                                    reservation.getPassengerAge() +
+                                                    " | Gender: " +
+                                                    reservation.getGender()
+                                    );
+
+// Date
+                            Label dateLabel =
+                                    new Label(
+                                            "Date: " +
+                                                    reservation.getJourneyDate()
+                                    );
+
+// Class - important
+                            Label classLabel =
+                                    new Label(
+                                            "Class: " +
+                                                    reservation.getClassType()
+                                    );
+
+                            classLabel.setStyle(
+                                    "-fx-font-weight: bold;"
+                            );
+
+// Berth + Quota - normal
+                            Label berthQuotaLabel =
+                                    new Label(
+                                            "Berth: " +
+                                                    reservation.getBerthPreference() +
+                                                    " | Quota: " +
+                                                    reservation.getQuota()
+                                    );
+
+// Fare + Status - important
+                            Label fareStatusLabel =
+                                    new Label(
+                                            "Fare: ₹" +
+                                                    reservation.getFare() +
+                                                    " | Status: " +
+                                                    reservation.getStatus()
+                                    );
+
+                            fareStatusLabel.setStyle(
+                                    "-fx-font-weight: bold;"
+                            );
+
+                            bookingLayout.getChildren().addAll(
+                                    pnrLabel,
+                                    trainLabel,
+                                    routeLabel,
+                                    passengerLabel,
+                                    passengerDetailsLabel,
+                                    dateLabel,
+                                    classLabel,
+                                    berthQuotaLabel,
+                                    fareStatusLabel
                             );
 
                             if ("CONFIRMED".equalsIgnoreCase(
@@ -232,7 +288,7 @@ public class MyBookingsScreen {
                             setGraphic(bookingLayout);
                             setText(null);
 
-                            setPrefHeight(190);
+                            setPrefHeight(220);
                         }
                     }
                 });

@@ -1,6 +1,7 @@
 package com.oibsip.reservation.ui;
 
 import com.oibsip.reservation.db.UserDAO;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,44 +18,89 @@ public class RegisterScreen {
 
     public void show(Stage stage) {
 
-        Label logoLabel = new Label("CROSQ");
+        // CROSQ logo
+        Label logoLabel =
+                new Label("CROSQ");
+
         logoLabel.setStyle(
-                "-fx-font-size: 26px;" +
+                "-fx-font-size: 30px;" +
                         "-fx-font-weight: bold;"
         );
 
-        Label titleLabel = new Label("Create your account");
+        // Heading
+        Label titleLabel =
+                new Label("Create your account");
+
         titleLabel.setStyle(
-                "-fx-font-size: 22px;" +
+                "-fx-font-size: 24px;" +
                         "-fx-font-weight: bold;"
         );
 
-        TextField usernameField = new TextField();
+        // Subtitle
+        Label subtitleLabel =
+                new Label("Join Crosq and start booking your journey");
+
+        subtitleLabel.setStyle(
+                "-fx-font-size: 14px;"
+        );
+
+        // Username
+        TextField usernameField =
+                new TextField();
+
         usernameField.setPromptText("Username");
-        usernameField.setMaxWidth(280);
+        usernameField.setMaxWidth(300);
+        usernameField.setPrefHeight(40);
 
-        PasswordField passwordField = new PasswordField();
+        // Password
+        PasswordField passwordField =
+                new PasswordField();
+
         passwordField.setPromptText("Password");
-        passwordField.setMaxWidth(280);
+        passwordField.setMaxWidth(300);
+        passwordField.setPrefHeight(40);
 
-        PasswordField confirmPasswordField = new PasswordField();
+        // Confirm password
+        PasswordField confirmPasswordField =
+                new PasswordField();
+
         confirmPasswordField.setPromptText("Confirm password");
-        confirmPasswordField.setMaxWidth(280);
+        confirmPasswordField.setMaxWidth(300);
+        confirmPasswordField.setPrefHeight(40);
 
-        Button registerButton = new Button("Create Account");
-        registerButton.setPrefWidth(280);
-        registerButton.setPrefHeight(40);
+        // Register button
+        Button registerButton =
+                new Button("Create Account");
 
-        Button loginButton = new Button("Back to Login");
-        loginButton.setPrefWidth(180);
+        registerButton.setPrefWidth(300);
+        registerButton.setPrefHeight(42);
 
-        Label messageLabel = new Label();
+        // Login button
+        Button loginButton =
+                new Button("Back to Login");
 
+        loginButton.setPrefWidth(200);
+        loginButton.setPrefHeight(38);
+
+        // Message
+        Label messageLabel =
+                new Label();
+
+        messageLabel.setStyle(
+                "-fx-font-size: 13px;"
+        );
+
+        // Register action
         registerButton.setOnAction(event -> {
 
-            String username = usernameField.getText().trim();
-            String password = passwordField.getText();
-            String confirmPassword = confirmPasswordField.getText();
+            String username =
+                    usernameField.getText().trim();
+
+            String password =
+                    passwordField.getText();
+
+            String confirmPassword =
+                    confirmPasswordField.getText();
 
             if (username.isEmpty()
                     || password.isEmpty()
@@ -63,6 +109,7 @@ public class RegisterScreen {
                 messageLabel.setText(
                         "Please fill in all fields."
                 );
+
                 return;
             }
 
@@ -71,6 +118,7 @@ public class RegisterScreen {
                 messageLabel.setText(
                         "Password must be at least 6 characters."
                 );
+
                 return;
             }
 
@@ -79,11 +127,15 @@ public class RegisterScreen {
                 messageLabel.setText(
                         "Passwords do not match."
                 );
+
                 return;
             }
 
             boolean registered =
-                    userDAO.registerUser(username, password);
+                    userDAO.registerUser(
+                            username,
+                            password
+                    );
 
             if (registered) {
 
@@ -103,29 +155,76 @@ public class RegisterScreen {
             }
         });
 
+        // Back to login
         loginButton.setOnAction(event -> {
-            LoginScreen loginScreen = new LoginScreen();
+
+            LoginScreen loginScreen =
+                    new LoginScreen();
+
             loginScreen.show(stage);
         });
 
-        VBox layout = new VBox(
-                12,
-                logoLabel,
-                titleLabel,
-                usernameField,
-                passwordField,
-                confirmPasswordField,
-                registerButton,
-                messageLabel,
-                loginButton
+        // Register card
+        VBox registerCard =
+                new VBox(
+                        15,
+                        logoLabel,
+                        titleLabel,
+                        subtitleLabel,
+                        usernameField,
+                        passwordField,
+                        confirmPasswordField,
+                        registerButton,
+                        messageLabel,
+                        loginButton
+                );
+
+        registerCard.setAlignment(
+                Pos.CENTER
         );
 
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(30));
+        registerCard.setPadding(
+                new Insets(35)
+        );
 
-        Scene scene = new Scene(layout, 500, 500);
+        registerCard.setMaxWidth(380);
 
-        stage.setTitle("Create Account - Crosq");
+        registerCard.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 12;" +
+                        "-fx-border-radius: 12;" +
+                        "-fx-border-color: #dddddd;"
+        );
+
+        // Main layout
+        VBox root =
+                new VBox(
+                        registerCard
+                );
+
+        root.setAlignment(
+                Pos.CENTER
+        );
+
+        root.setPadding(
+                new Insets(30)
+        );
+
+        root.setStyle(
+                "-fx-background-color: #f4f6f8;"
+        );
+
+        Scene scene =
+                new Scene(
+                        root,
+                        600,
+                        600
+                );
+
+        stage.setTitle(
+                "Crosq - Create Account"
+        );
+
         stage.setScene(scene);
         stage.show();
     }

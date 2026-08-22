@@ -1,6 +1,7 @@
 package com.oibsip.reservation.ui;
 
 import com.oibsip.reservation.db.UserDAO;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,50 +13,110 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class LoginScreen {
+
     private final UserDAO userDAO = new UserDAO();
-    public void show(Stage stage){
-        Label titleLabel = new Label("Train Ticket Booking System");
-        titleLabel.setStyle(
-                "-fx-font-size: 24px;" +
-                "-fx-font-weight: bold;"
+
+    public void show(Stage stage) {
+
+        // CROSQ logo
+        Label logoLabel = new Label("CROSQ");
+
+        logoLabel.setStyle(
+                "-fx-font-size: 30px;" +
+                        "-fx-font-weight: bold;"
         );
 
-        Label subtitleLabel = new Label("Login to continue");
+        // Main heading
+        Label titleLabel =
+                new Label("Train Ticket Booking");
 
-        TextField usernameField = new TextField();
+        titleLabel.setStyle(
+                "-fx-font-size: 24px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        // Subtitle
+        Label subtitleLabel =
+                new Label("Login to continue your journey");
+
+        subtitleLabel.setStyle(
+                "-fx-font-size: 14px;"
+        );
+
+        // Username
+        TextField usernameField =
+                new TextField();
+
         usernameField.setPromptText("Username");
-        usernameField.setMaxWidth(280);
+        usernameField.setMaxWidth(300);
+        usernameField.setPrefHeight(40);
 
-        PasswordField passwordField = new PasswordField();
+        // Password
+        PasswordField passwordField =
+                new PasswordField();
+
         passwordField.setPromptText("Password");
-        passwordField.setMaxWidth(280);
+        passwordField.setMaxWidth(300);
+        passwordField.setPrefHeight(40);
 
-        Button loginButton = new Button("Login");
-        loginButton.setPrefWidth(280);
+        // Login button
+        Button loginButton =
+                new Button("Login");
 
-        Button registerButton = new Button("Create Account");
-        registerButton.setPrefWidth(180);
+        loginButton.setPrefWidth(300);
+        loginButton.setPrefHeight(42);
 
-        Label messageLabel = new Label();
+        // Register button
+        Button registerButton =
+                new Button("Create Account");
 
+        registerButton.setPrefWidth(200);
+        registerButton.setPrefHeight(38);
+
+        // Message
+        Label messageLabel =
+                new Label();
+
+        messageLabel.setStyle(
+                "-fx-font-size: 13px;"
+        );
+
+        // Login action
         loginButton.setOnAction(event -> {
 
-            String username = usernameField.getText().trim();
-            String password = passwordField.getText();
+            String username =
+                    usernameField.getText().trim();
 
-            if (username.isEmpty() || password.isEmpty()) {
-                messageLabel.setText("Please enter username and password.");
+            String password =
+                    passwordField.getText();
+
+            if (username.isEmpty() ||
+                    password.isEmpty()) {
+
+                messageLabel.setText(
+                        "Please enter username and password."
+                );
+
                 return;
             }
 
             boolean authenticated =
-                    userDAO.authenticateUser(username, password);
+                    userDAO.authenticateUser(
+                            username,
+                            password
+                    );
 
             if (authenticated) {
-                int userId = userDAO.getUserId(username);
+
+                int userId =
+                        userDAO.getUserId(username);
 
                 if (userId == -1) {
-                    messageLabel.setText("Unable to load user information.");
+
+                    messageLabel.setText(
+                            "Unable to load user information."
+                    );
+
                     return;
                 }
 
@@ -67,34 +128,84 @@ public class LoginScreen {
                         username,
                         userId
                 );
+
             } else {
-                messageLabel.setText("Invalid username or password.");
+
+                messageLabel.setText(
+                        "Invalid username or password."
+                );
             }
         });
 
+        // Register action
         registerButton.setOnAction(event -> {
 
-            RegisterScreen registerScreen = new RegisterScreen();
+            RegisterScreen registerScreen =
+                    new RegisterScreen();
+
             registerScreen.show(stage);
         });
 
-        VBox layout = new VBox(
-                12,
-                titleLabel,
-                subtitleLabel,
-                usernameField,
-                passwordField,
-                loginButton,
-                registerButton,
-                messageLabel
+        // Login card
+        VBox loginCard =
+                new VBox(
+                        15,
+                        logoLabel,
+                        titleLabel,
+                        subtitleLabel,
+                        usernameField,
+                        passwordField,
+                        loginButton,
+                        registerButton,
+                        messageLabel
+                );
+
+        loginCard.setAlignment(
+                Pos.CENTER
         );
 
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(30));
+        loginCard.setPadding(
+                new Insets(35)
+        );
 
-        Scene scene = new Scene(layout, 500, 400);
+        loginCard.setMaxWidth(380);
 
-        stage.setTitle("Login - Train Ticket Booking System");
+        loginCard.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 12;" +
+                        "-fx-border-radius: 12;" +
+                        "-fx-border-color: #dddddd;"
+        );
+
+        // Main layout
+        VBox root =
+                new VBox(
+                        loginCard
+                );
+
+        root.setAlignment(
+                Pos.CENTER
+        );
+
+        root.setPadding(
+                new Insets(30)
+        );
+
+        root.setStyle(
+                "-fx-background-color: #f4f6f8;"
+        );
+
+        Scene scene =
+                new Scene(
+                        root,
+                        600,
+                        500
+                );
+
+        stage.setTitle(
+                "Crosq - Train Ticket Booking"
+        );
+
         stage.setScene(scene);
         stage.show();
     }
