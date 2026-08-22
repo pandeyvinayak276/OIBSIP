@@ -1,5 +1,18 @@
 package com.oibsip.reservation.ui;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.Font;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+
+import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.io.FileOutputStream;
+
 import com.oibsip.reservation.db.ReservationDAO;
 import com.oibsip.reservation.model.Train;
 import com.oibsip.reservation.model.TrainClass;
@@ -431,8 +444,6 @@ public class PaymentScreen {
             String berthPreference,
             String quota) {
 
-        // ===== Crosq E-Ticket Header =====
-
         Label crosqLabel =
                 new Label("CROSQ");
 
@@ -458,8 +469,6 @@ public class PaymentScreen {
 
         header.setAlignment(Pos.CENTER);
 
-        // ===== Booking Status =====
-
         Label statusLabel =
                 new Label("✓  BOOKING CONFIRMED");
 
@@ -471,8 +480,6 @@ public class PaymentScreen {
                         "-fx-border-radius: 5;" +
                         "-fx-background-radius: 5;"
         );
-
-        // ===== PNR =====
 
         Label pnrCaption =
                 new Label("PNR NUMBER");
@@ -498,8 +505,6 @@ public class PaymentScreen {
                 );
 
         pnrBox.setAlignment(Pos.CENTER);
-
-        // ===== Train Details =====
 
         Label trainLabel =
                 new Label(
@@ -547,8 +552,6 @@ public class PaymentScreen {
 
         routeBox.setAlignment(Pos.CENTER);
 
-        // ===== Passenger Details =====
-
         Label passengerHeading =
                 new Label("PASSENGER DETAILS");
 
@@ -582,8 +585,6 @@ public class PaymentScreen {
         passengerBox.setPadding(
                 new Insets(10)
         );
-
-        // ===== Journey Details =====
 
         Label journeyHeading =
                 new Label("JOURNEY DETAILS");
@@ -631,8 +632,6 @@ public class PaymentScreen {
                 new Insets(10)
         );
 
-        // ===== Fare =====
-
         Label fareCaption =
                 new Label("TOTAL FARE");
 
@@ -660,8 +659,6 @@ public class PaymentScreen {
                 );
 
         fareBox.setAlignment(Pos.CENTER_RIGHT);
-
-        // ===== Ticket Content =====
 
         VBox ticket =
                 new VBox(
@@ -691,7 +688,54 @@ public class PaymentScreen {
                         "-fx-background-radius: 10;"
         );
 
-        // ===== Back Button =====
+        // Download PDF button
+        Button downloadButton =
+                new Button("Download E-Ticket PDF");
+
+        downloadButton.setPrefWidth(220);
+        downloadButton.setPrefHeight(40);
+
+        downloadButton.setOnAction(event -> {
+
+            FileChooser fileChooser =
+                    new FileChooser();
+
+            fileChooser.setTitle(
+                    "Save Crosq E-Ticket"
+            );
+
+            fileChooser.setInitialFileName(
+                    "Crosq_E-Ticket_" +
+                            pnr +
+                            ".pdf"
+            );
+
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter(
+                            "PDF Files",
+                            "*.pdf"
+                    )
+            );
+
+            File file =
+                    fileChooser.showSaveDialog(stage);
+
+            if (file != null) {
+
+                generateETicketPDF(
+                        file,
+                        train,
+                        pnr,
+                        passengerName,
+                        age,
+                        gender,
+                        journeyDate,
+                        selectedClass,
+                        berthPreference,
+                        quota
+                );
+            }
+        });
 
         Button dashboardButton =
                 new Button("Back to Dashboard");
@@ -703,13 +747,20 @@ public class PaymentScreen {
                 stage.close()
         );
 
-        // ===== Main Layout =====
+        VBox buttonBox =
+                new VBox(
+                        10,
+                        downloadButton,
+                        dashboardButton
+                );
+
+        buttonBox.setAlignment(Pos.CENTER);
 
         VBox layout =
                 new VBox(
                         20,
                         ticket,
-                        dashboardButton
+                        buttonBox
                 );
 
         layout.setAlignment(Pos.CENTER);
@@ -725,7 +776,7 @@ public class PaymentScreen {
                 new Scene(
                         layout,
                         650,
-                        850
+                        900
                 );
 
         stage.setTitle(
@@ -734,5 +785,353 @@ public class PaymentScreen {
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void generateETicketPDF(
+            File file,
+            Train train,
+            String pnr,
+            String passengerName,
+            int age,
+            String gender,
+            LocalDate journeyDate,
+            TrainClass selectedClass,
+            String berthPreference,
+            String quota) {
+
+        Document document =
+                new Document();
+
+        try {
+
+            PdfWriter.getInstance(
+                    document,
+                    new FileOutputStream(file)
+            );
+
+            document.open();
+
+            // Fonts
+            Font titleFont =
+                    new Font(
+                            Font.HELVETICA,
+                            24,
+                            Font.BOLD
+                    );
+
+            Font headingFont =
+                    new Font(
+                            Font.HELVETICA,
+                            14,
+                            Font.BOLD
+                    );
+
+            Font normalFont =
+                    new Font(
+                            Font.HELVETICA,
+                            11,
+                            Font.NORMAL
+                    );
+
+            Font boldFont =
+                    new Font(
+                            Font.HELVETICA,
+                            11,
+                            Font.BOLD
+                    );
+
+            // Header
+            Paragraph title =
+                    new Paragraph(
+                            "CROSQ",
+                            titleFont
+                    );
+
+            title.setAlignment(
+                    Paragraph.ALIGN_CENTER
+            );
+
+            document.add(title);
+
+            Paragraph ticketTitle =
+                    new Paragraph(
+                            "E-TICKET",
+                            headingFont
+                    );
+
+            ticketTitle.setAlignment(
+                    Paragraph.ALIGN_CENTER
+            );
+
+            document.add(ticketTitle);
+
+            document.add(
+                    new Paragraph(" ")
+            );
+
+            // Confirmation
+            Paragraph confirmed =
+                    new Paragraph(
+                            "BOOKING CONFIRMED",
+                            headingFont
+                    );
+
+            confirmed.setAlignment(
+                    Paragraph.ALIGN_CENTER
+            );
+
+            document.add(confirmed);
+
+            document.add(
+                    new Paragraph(" ")
+            );
+
+            // PNR
+            Paragraph pnrParagraph =
+                    new Paragraph(
+                            "PNR: " + pnr,
+                            boldFont
+                    );
+
+            pnrParagraph.setAlignment(
+                    Paragraph.ALIGN_CENTER
+            );
+
+            document.add(pnrParagraph);
+
+            document.add(
+                    new Paragraph(" ")
+            );
+
+            // Train
+            document.add(
+                    new Paragraph(
+                            "TRAIN DETAILS",
+                            headingFont
+                    )
+            );
+
+            document.add(
+                    new Paragraph(
+                            "Train Number: " +
+                                    train.getTrainNumber(),
+                            normalFont
+                    )
+            );
+
+            document.add(
+                    new Paragraph(
+                            "Train Name: " +
+                                    train.getTrainName(),
+                            normalFont
+                    )
+            );
+
+            document.add(
+                    new Paragraph(
+                            "Route: " +
+                                    train.getSource() +
+                                    " → " +
+                                    train.getDestination(),
+                            normalFont
+                    )
+            );
+
+            document.add(
+                    new Paragraph(" ")
+            );
+
+            // Passenger
+            document.add(
+                    new Paragraph(
+                            "PASSENGER DETAILS",
+                            headingFont
+                    )
+            );
+
+            document.add(
+                    new Paragraph(
+                            "Passenger Name: " +
+                                    passengerName,
+                            normalFont
+                    )
+            );
+
+            document.add(
+                    new Paragraph(
+                            "Age: " +
+                                    age,
+                            normalFont
+                    )
+            );
+
+            document.add(
+                    new Paragraph(
+                            "Gender: " +
+                                    gender,
+                            normalFont
+                    )
+            );
+
+            document.add(
+                    new Paragraph(" ")
+            );
+
+            // Journey
+            document.add(
+                    new Paragraph(
+                            "JOURNEY DETAILS",
+                            headingFont
+                    )
+            );
+
+            PdfPTable journeyTable =
+                    new PdfPTable(2);
+
+            journeyTable.setWidthPercentage(100);
+
+            addPDFRow(
+                    journeyTable,
+                    "Journey Date",
+                    journeyDate.toString(),
+                    normalFont,
+                    boldFont
+            );
+
+            addPDFRow(
+                    journeyTable,
+                    "Class",
+                    selectedClass.getClassType(),
+                    normalFont,
+                    boldFont
+            );
+
+            addPDFRow(
+                    journeyTable,
+                    "Berth Preference",
+                    berthPreference,
+                    normalFont,
+                    boldFont
+            );
+
+            addPDFRow(
+                    journeyTable,
+                    "Quota",
+                    quota,
+                    normalFont,
+                    boldFont
+            );
+
+            addPDFRow(
+                    journeyTable,
+                    "Status",
+                    "CONFIRMED",
+                    normalFont,
+                    boldFont
+            );
+
+            document.add(
+                    journeyTable
+            );
+
+            document.add(
+                    new Paragraph(" ")
+            );
+
+            // Fare
+            Paragraph fare =
+                    new Paragraph(
+                            "TOTAL FARE: ₹" +
+                                    selectedClass.getFare(),
+                            headingFont
+                    );
+
+            fare.setAlignment(
+                    Paragraph.ALIGN_RIGHT
+            );
+
+            document.add(fare);
+
+            document.add(
+                    new Paragraph(" ")
+            );
+
+            Paragraph footer =
+                    new Paragraph(
+                            "Thank you for booking with Crosq.",
+                            normalFont
+                    );
+
+            footer.setAlignment(
+                    Paragraph.ALIGN_CENTER
+            );
+
+            document.add(footer);
+
+            document.close();
+
+            Alert success =
+                    new Alert(
+                            Alert.AlertType.INFORMATION
+                    );
+
+            success.setTitle("Crosq");
+            success.setHeaderText(
+                    "E-Ticket Downloaded"
+            );
+
+            success.setContentText(
+                    "Your E-Ticket has been saved successfully."
+            );
+
+            success.showAndWait();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            Alert error =
+                    new Alert(
+                            Alert.AlertType.ERROR
+                    );
+
+            error.setTitle("Crosq");
+            error.setHeaderText(
+                    "PDF Generation Failed"
+            );
+
+            error.setContentText(
+                    "Unable to generate the E-Ticket PDF."
+            );
+
+            error.showAndWait();
+        }
+    }
+
+    private void addPDFRow(
+            PdfPTable table,
+            String label,
+            String value,
+            Font normalFont,
+            Font boldFont) {
+
+        PdfPCell labelCell =
+                new PdfPCell(
+                        new Phrase(
+                                label,
+                                boldFont
+                        )
+                );
+
+        PdfPCell valueCell =
+                new PdfPCell(
+                        new Phrase(
+                                value,
+                                normalFont
+                        )
+                );
+
+        table.addCell(labelCell);
+        table.addCell(valueCell);
     }
 }
