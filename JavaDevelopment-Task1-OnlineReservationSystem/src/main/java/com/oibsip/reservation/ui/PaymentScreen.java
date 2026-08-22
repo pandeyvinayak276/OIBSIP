@@ -48,6 +48,41 @@ public class PaymentScreen {
         alert.showAndWait();
     }
 
+    private boolean validatePaymentDetails(
+            String paymentMethod,
+            String paymentDetails) {
+
+        if ("UPI".equals(paymentMethod)) {
+
+            return paymentDetails.matches(
+                    "[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+"
+            );
+        }
+
+        if ("Debit/Credit Card".equals(paymentMethod)) {
+
+            return paymentDetails.matches(
+                    "\\d{16}"
+            );
+        }
+
+        if ("Net Banking".equals(paymentMethod)) {
+
+            return paymentDetails.matches(
+                    "[a-zA-Z0-9._-]{4,30}"
+            );
+        }
+
+        if ("Crosq Wallet".equals(paymentMethod)) {
+
+            return paymentDetails.matches(
+                    "[a-zA-Z0-9._-]{4,30}"
+            );
+        }
+
+        return false;
+    }
+
     public void show(
             Stage stage,
             Train train,
@@ -231,6 +266,15 @@ public class PaymentScreen {
                         "Please enter the required payment details."
                 );
 
+                return;
+            }
+
+            if(!validatePaymentDetails(
+                    paymentMethod,
+                    paymentDetails)) {
+                showError(
+                        "Please enter valid demo payment details."
+                );
                 return;
             }
 
