@@ -149,7 +149,7 @@ public class ReviewBookingScreen {
         backButton.setPrefHeight(40);
 
         Button confirmButton =
-                new Button("Confirm Booking");
+                new Button("Proceed to Payment");
 
         confirmButton.setPrefWidth(180);
         confirmButton.setPrefHeight(40);
@@ -184,65 +184,22 @@ public class ReviewBookingScreen {
          */
         confirmButton.setOnAction(event -> {
 
-            boolean available =
-                    reservationDAO.isClassAvailable(
-                            train.getTrainNumber(),
-                            selectedClass.getClassType(),
-                            journeyDate.toString()
-                    );
+            PaymentScreen paymentScreen =
+                    new PaymentScreen();
 
-            if (!available) {
-
-                showError(
-                        "Sorry, this class is no longer available."
-                );
-
-                return;
-            }
-
-            // Generate PNR only when confirming
-            String pnr =
-                    PNRGenerator.generatePNR();
-
-            // Save reservation
-            boolean booked =
-                    reservationDAO.createReservation(
-                            userId,
-                            pnr,
-                            passengerName,
-                            age,
-                            gender,
-                            train.getTrainNumber(),
-                            selectedClass.getClassType(),
-                            journeyDate.toString(),
-                            train.getSource(),
-                            train.getDestination(),
-                            berthPreference,
-                            quota,
-                            selectedClass.getFare()
-                    );
-
-            if (booked) {
-
-                showConfirmation(
-                        stage,
-                        train,
-                        pnr,
-                        passengerName,
-                        age,
-                        gender,
-                        journeyDate,
-                        selectedClass,
-                        berthPreference,
-                        quota
-                );
-
-            } else {
-
-                showError(
-                        "Booking failed. Please try again."
-                );
-            }
+            paymentScreen.show(
+                    stage,
+                    train,
+                    passengerName,
+                    age,
+                    gender,
+                    journeyDate,
+                    selectedClass,
+                    berthPreference,
+                    quota,
+                    username,
+                    userId
+            );
         });
 
         HBox buttonLayout =
