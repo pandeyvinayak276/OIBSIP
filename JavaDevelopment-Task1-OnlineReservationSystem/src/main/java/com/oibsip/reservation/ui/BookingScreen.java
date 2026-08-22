@@ -16,14 +16,13 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class ReservationScreen {
+public class BookingScreen {
 
     private final TrainClassDAO trainClassDAO = new TrainClassDAO();
     private final ReservationDAO reservationDAO = new ReservationDAO();

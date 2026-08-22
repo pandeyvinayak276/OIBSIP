@@ -33,7 +33,7 @@ public class DashboardScreen {
         );
 
         Label descriptionLabel = new Label(
-                "Search trains, reserve your seat and manage your trips."
+                "Search trains, book your ticket and manage your trips."
         );
 
         Button searchButton = new Button("Search Trains");

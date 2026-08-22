@@ -3,7 +3,6 @@ package com.oibsip.reservation.ui;
 import com.oibsip.reservation.db.ReservationDAO;
 import com.oibsip.reservation.model.Train;
 import com.oibsip.reservation.model.TrainClass;
-import com.oibsip.reservation.util.PNRGenerator;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -162,10 +161,10 @@ public class ReviewBookingScreen {
          */
         backButton.setOnAction(event -> {
 
-            ReservationScreen reservationScreen =
-                    new ReservationScreen();
+            BookingScreen bookingScreen =
+                    new BookingScreen();
 
-            reservationScreen.show(
+            bookingScreen.show(
                     stage,
                     train,
                     journeyDate,

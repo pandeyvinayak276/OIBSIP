@@ -14,9 +14,9 @@ import javafx.stage.Stage;
 public class LoginScreen {
     private final UserDAO userDAO = new UserDAO();
     public void show(Stage stage){
-        Label titleLabel = new Label("Online Reservation System");
+        Label titleLabel = new Label("Train Ticket Booking System");
         titleLabel.setStyle(
-                "-fx-font-sixe: 24px;" +
+                "-fx-font-size: 24px;" +
                 "-fx-font-weight: bold;"
         );
 
@@ -94,7 +94,7 @@ public class LoginScreen {
 
         Scene scene = new Scene(layout, 500, 400);
 
-        stage.setTitle("Login - Online Reservation System");
+        stage.setTitle("Login - Train Ticket Booking System");
         stage.setScene(scene);
         stage.show();
     }

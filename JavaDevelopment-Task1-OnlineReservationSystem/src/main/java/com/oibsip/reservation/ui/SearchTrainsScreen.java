@@ -87,13 +87,13 @@ public class SearchTrainsScreen {
         trainListView.setPrefWidth(750);
 
         // Reserve button
-        Button reserveButton =
-                new Button("Reserve Selected Train");
+        Button bookButton =
+                new Button("Book Selected Train");
 
-        reserveButton.setPrefWidth(220);
-        reserveButton.setPrefHeight(40);
+        bookButton.setPrefWidth(220);
+        bookButton.setPrefHeight(40);
 
-        reserveButton.setOnAction(event -> {
+        bookButton.setOnAction(event -> {
 
             Train selectedTrain =
                     trainListView
@@ -114,10 +114,10 @@ public class SearchTrainsScreen {
                 return;
             }
 
-            ReservationScreen reservationScreen =
-                    new ReservationScreen();
+            BookingScreen bookingScreen =
+                    new BookingScreen();
 
-            reservationScreen.show(
+            bookingScreen.show(
                     stage,
                     selectedTrain,
                     selectedJourneyDate,
@@ -295,7 +295,7 @@ public class SearchTrainsScreen {
                 searchBox,
                 statusLabel,
                 trainListView,
-                reserveButton
+                bookButton
         );
 
         Scene scene =
