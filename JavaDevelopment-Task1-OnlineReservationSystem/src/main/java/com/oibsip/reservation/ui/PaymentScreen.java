@@ -439,7 +439,9 @@ public class PaymentScreen {
                         journeyDate,
                         selectedClass,
                         berthPreference,
-                        quota
+                        quota,
+                        username,
+                        userId
                 );
 
             } else {
@@ -486,7 +488,9 @@ public class PaymentScreen {
             LocalDate journeyDate,
             TrainClass selectedClass,
             String berthPreference,
-            String quota) {
+            String quota,
+            String username,
+            int userId) {
 
         Label crosqLabel =
                 new Label("CROSQ");
@@ -787,9 +791,17 @@ public class PaymentScreen {
         dashboardButton.setPrefWidth(220);
         dashboardButton.setPrefHeight(40);
 
-        dashboardButton.setOnAction(event ->
-                stage.close()
-        );
+        dashboardButton.setOnAction(event -> {
+
+            DashboardScreen dashboardScreen =
+                    new DashboardScreen();
+
+            dashboardScreen.show(
+                    stage,
+                    username,
+                    userId
+            );
+        });
 
         VBox buttonBox =
                 new VBox(

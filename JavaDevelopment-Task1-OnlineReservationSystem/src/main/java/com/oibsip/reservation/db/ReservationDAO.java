@@ -157,7 +157,7 @@ public class ReservationDAO {
             JOIN trains t
                 ON r.train_number = t.train_number
             WHERE r.user_id = ?
-            ORDER BY r.journey_date DESC
+            ORDER BY r.rowid DESC
             """;
 
         try (Connection connection =
