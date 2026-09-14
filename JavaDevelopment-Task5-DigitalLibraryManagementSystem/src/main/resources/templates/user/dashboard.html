@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Digital Library - Dashboard</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <h1>Welcome, <span th:text="${user.fullName}">User</span>!</h1>
+
+        <p class="subtitle">
+            Welcome to the Digital Library Management System
+        </p>
+
+        <p>
+            Username:
+            <strong th:text="${user.username}">username</strong>
+        </p>
+
+        <p>
+            Role:
+            <strong th:text="${user.role}">USER</strong>
+        </p>
+
+        <br>
+
+        <a href="/logout">
+            <button type="button">Logout</button>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

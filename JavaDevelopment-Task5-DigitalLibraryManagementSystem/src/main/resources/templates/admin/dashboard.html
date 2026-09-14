@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Digital Library - Admin Dashboard</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <h1>Admin Dashboard</h1>
+
+        <p class="subtitle">
+            Welcome, <strong th:text="${user.fullName}">Administrator</strong>
+        </p>
+
+        <p>
+            You are logged in as:
+            <strong th:text="${user.role}">ADMIN</strong>
+        </p>
+
+        <br>
+
+        <button type="button">Manage Books</button>
+
+        <br><br>
+
+        <button type="button">Issued Books</button>
+
+        <br><br>
+
+        <button type="button">Members</button>
+
+        <br><br>
+
+        <button type="button">Fines</button>
+
+        <br><br>
+
+        <button type="button">Contact Messages</button>
+
+        <br><br>
+
+        <a href="/logout">
+            <button type="button">Logout</button>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
