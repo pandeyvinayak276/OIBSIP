@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Book - Digital Library</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <h1>Add New Book</h1>
+
+        <p class="subtitle">
+            Add a book to the library catalogue
+        </p>
+
+        <div th:if="${error}" class="error-message"
+             th:text="${error}">
+            Error message
+        </div>
+
+        <form action="/admin/books/add" method="post">
+
+            <input type="text"
+                   name="title"
+                   placeholder="Book Title"
+                   required>
+
+            <input type="text"
+                   name="author"
+                   placeholder="Author"
+                   required>
+
+            <input type="text"
+                   name="isbn"
+                   placeholder="ISBN"
+                   required>
+
+            <input type="text"
+                   name="category"
+                   placeholder="Category"
+                   required>
+
+            <input type="number"
+                   name="totalQuantity"
+                   placeholder="Total Quantity"
+                   min="1"
+                   required>
+
+            <button type="submit">
+                Add Book
+            </button>
+
+        </form>
+
+        <br>
+
+        <a href="/admin/books" class="btn secondary-btn">
+            Back to Books
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Book - Digital Library</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <h1>Edit Book</h1>
+
+        <p class="subtitle">
+            Update book details
+        </p>
+
+        <div th:if="${error}" class="error-message"
+             th:text="${error}">
+            Error message
+        </div>
+
+        <form th:action="@{/admin/books/edit/{id}(id=${book.id})}"
+              method="post">
+
+            <input type="text"
+                   name="title"
+                   placeholder="Book Title"
+                   th:value="${book.title}"
+                   required>
+
+            <input type="text"
+                   name="author"
+                   placeholder="Author"
+                   th:value="${book.author}"
+                   required>
+
+            <input type="text"
+                   name="isbn"
+                   placeholder="ISBN"
+                   th:value="${book.isbn}"
+                   required>
+
+            <input type="text"
+                   name="category"
+                   placeholder="Category"
+                   th:value="${book.category}"
+                   required>
+
+            <input type="number"
+                   name="totalQuantity"
+                   placeholder="Total Quantity"
+                   th:value="${book.totalQuantity}"
+                   min="1"
+                   required>
+
+            <button type="submit">
+                Update Book
+            </button>
+
+        </form>
+
+        <br>
+
+        <a href="/admin/books" class="btn secondary-btn">
+            Cancel
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

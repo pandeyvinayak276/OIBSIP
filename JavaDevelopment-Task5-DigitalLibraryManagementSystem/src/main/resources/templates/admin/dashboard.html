@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,28 +28,30 @@
 
         <br>
 
-        <button type="button">Manage Books</button>
+        <a href="/admin/books" class="btn primary-btn admin-btn">
+            Manage Books
+        </a>
 
         <br><br>
 
-        <button type="button">Issued Books</button>
+        <button type="button" class="admin-btn">Issued Books</button>
 
         <br><br>
 
-        <button type="button">Members</button>
+        <button type="button" class="admin-btn">Members</button>
 
         <br><br>
 
-        <button type="button">Fines</button>
+        <button type="button" class="admin-btn">Fines</button>
 
         <br><br>
 
-        <button type="button">Contact Messages</button>
+        <button type="button" class="admin-btn">Contact Messages</button>
 
         <br><br>
 
-        <a href="/logout">
-            <button type="button">Logout</button>
+        <a href="/logout" class="btn secondary-btn admin-btn">
+            Logout
         </a>
 
     </div>
