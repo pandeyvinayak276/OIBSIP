@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Books - Digital Library</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <div class="page-header">
+
+        <div>
+            <h1>My Books</h1>
+
+            <p>
+                Books issued to
+                <strong th:text="${user.fullName}">User</strong>
+            </p>
+        </div>
+
+        <div>
+            <a href="/user/dashboard" class="btn secondary-btn">
+                Dashboard
+            </a>
+
+            <a href="/user/books" class="btn primary-btn">
+                Browse Books
+            </a>
+        </div>
+
+    </div>
+
+
+    <div th:if="${#lists.isEmpty(issues)}"
+         class="empty-state">
+
+        <h3>No Books Yet</h3>
+
+        <p>
+            You have not issued any books yet.
+        </p>
+
+        <br>
+
+        <a href="/user/books" class="btn primary-btn">
+            Browse Books
+        </a>
+
+    </div>
+
+
+    <div th:unless="${#lists.isEmpty(issues)}"
+         class="table-container">
+
+        <table>
+
+            <thead>
+
+            <tr>
+                <th>Book</th>
+                <th>Author</th>
+                <th>Issue Date</th>
+                <th>Due Date</th>
+                <th>Return Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <tr th:each="issue : ${issues}">
+
+                <td th:text="${issue.book.title}">
+                    Book
+                </td>
+
+                <td th:text="${issue.book.author}">
+                    Author
+                </td>
+
+                <td th:text="${issue.issueDate}">
+                    2026-09-15
+                </td>
+
+                <td th:text="${issue.dueDate}">
+                    2026-09-29
+                </td>
+
+                <td th:text="${issue.returnDate != null ? issue.returnDate : '-'}">
+                    -
+                </td>
+
+                <td>
+                    <strong th:text="${issue.status}">
+                        ISSUED
+                    </strong>
+                </td>
+
+                <td>
+
+                    <form th:if="${issue.status == 'ISSUED'}"
+                          th:action="@{/user/books/return/{id}(id=${issue.id})}"
+                          method="post">
+
+                        <button type="submit">
+                            Return Book
+                        </button>
+
+                    </form>
+
+                    <span th:unless="${issue.status == 'ISSUED'}">
+                        Returned
+                    </span>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

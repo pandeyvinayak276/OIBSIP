@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Browse Books - Digital Library</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <div class="page-header">
+
+        <div>
+            <h1>Library Catalogue</h1>
+
+            <p>
+                Welcome,
+                <strong th:text="${user.fullName}">User</strong>
+            </p>
+        </div>
+
+        <div>
+            <a href="/user/dashboard" class="btn secondary-btn">
+                Dashboard
+            </a>
+
+            <a href="/logout" class="btn secondary-btn">
+                Logout
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- Search and Category Filter -->
+
+    <div class="search-panel">
+
+        <form action="/user/books" method="get">
+
+            <input type="text"
+                   name="keyword"
+                   placeholder="Search by title or author"
+                   th:value="${keyword}">
+
+            <select name="category">
+
+                <option value="">
+                    All Categories
+                </option>
+
+                <option th:each="cat : ${categories}"
+                        th:value="${cat}"
+                        th:text="${cat}"
+                        th:selected="${cat == selectedCategory}">
+                </option>
+
+            </select>
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- Book Catalogue -->
+
+    <div th:if="${#lists.isEmpty(books)}" class="empty-state">
+
+        <h3>No books found</h3>
+
+        <p>
+            Try a different title, author, or category.
+        </p>
+
+    </div>
+
+
+    <div th:unless="${#lists.isEmpty(books)}"
+         class="book-grid">
+
+        <div class="book-card"
+             th:each="book : ${books}">
+
+            <h2 th:text="${book.title}">
+                Book Title
+            </h2>
+
+            <p>
+                <strong>Author:</strong>
+                <span th:text="${book.author}">Author</span>
+            </p>
+
+            <p>
+                <strong>ISBN:</strong>
+                <span th:text="${book.isbn}">ISBN</span>
+            </p>
+
+            <p>
+                <strong>Category:</strong>
+                <span th:text="${book.category}">Category</span>
+            </p>
+
+            <p>
+                <strong>Total Copies:</strong>
+                <span th:text="${book.totalQuantity}">5</span>
+            </p>
+
+            <p>
+                <strong>Available:</strong>
+                <span th:text="${book.availableQuantity}">5</span>
+            </p>
+
+            <form th:action="@{/user/books/issue/{id}(id=${book.id})}"
+                  method="post"
+                  th:if="${book.availableQuantity > 0}">
+
+                <button type="submit">
+                    Issue Book
+                </button>
+
+            </form>
+
+            <button type="button"
+                    disabled
+                    th:unless="${book.availableQuantity > 0}">
+                Currently Unavailable
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

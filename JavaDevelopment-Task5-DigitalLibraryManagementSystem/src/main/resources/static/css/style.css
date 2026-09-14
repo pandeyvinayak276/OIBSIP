@@ -199,3 +199,12 @@ th {
     margin-left: auto;
     margin-right: auto;
 }
+.dashboard-btn {
+    display: block;
+    width: 425px;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
