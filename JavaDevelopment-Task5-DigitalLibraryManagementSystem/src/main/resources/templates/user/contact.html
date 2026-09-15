@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Library - Crosq</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <div class="page-header">
+        <div>
+            <h1>Contact Library</h1>
+            <p>Send us your questions or queries.</p>
+        </div>
+
+        <a href="/user/dashboard" class="btn secondary-btn">
+            Back to Dashboard
+        </a>
+    </div>
+
+    <div class="form-container">
+
+        <div th:if="${success}" class="success-message"
+             th:text="${success}">
+        </div>
+
+        <div th:if="${error}" class="error-message"
+             th:text="${error}">
+        </div>
+
+        <form action="/user/contact" method="post">
+
+            <label for="subject">Subject</label>
+
+            <input type="text"
+                   id="subject"
+                   name="subject"
+                   placeholder="Enter your query subject"
+                   required>
+
+            <label for="message">Message</label>
+
+            <textarea id="message"
+                      name="message"
+                      rows="6"
+                      maxlength="2000"
+                      placeholder="Write your query here..."
+                      required></textarea>
+
+            <button type="submit"
+                    class="btn primary-btn">
+                Submit Query
+            </button>
+
+        </form>
+
+        <div class="table-container" style="margin-top: 30px;">
+
+            <h2>My Queries</h2>
+
+            <table>
+
+                <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Message</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="message : ${messages}">
+
+                    <td th:text="${message.subject}"></td>
+
+                    <td th:text="${message.message}"></td>
+
+                    <td th:text="${message.createdAt}"></td>
+
+                    <td>
+                        <span th:text="${message.status}"></span>
+                    </td>
+
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(messages)}">
+                    <td colspan="4" class="empty-state">
+                        You have not submitted any queries yet.
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

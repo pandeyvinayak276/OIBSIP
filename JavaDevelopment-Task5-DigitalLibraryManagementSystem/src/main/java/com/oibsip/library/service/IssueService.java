@@ -88,4 +88,7 @@ public class IssueService {
 
         return true;
     }
+    public List<Issue> getAllIssuedBooks() {
+        return issueRepository.findByStatus("ISSUED");
+    }
 }

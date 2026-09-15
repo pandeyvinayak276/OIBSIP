@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Messages - Crosq Library</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <div class="page-header">
+        <div>
+            <h1>Contact Messages</h1>
+            <p>View and manage user queries.</p>
+        </div>
+
+        <a href="/admin/dashboard" class="btn secondary-btn">
+            Back to Dashboard
+        </a>
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+            <tr>
+                <th>User</th>
+                <th>Subject</th>
+                <th>Message</th>
+                <th>Submitted</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="message : ${messages}">
+
+                <td th:text="${message.user.fullName}"></td>
+
+                <td th:text="${message.subject}"></td>
+
+                <td th:text="${message.message}"></td>
+
+                <td th:text="${message.createdAt}"></td>
+
+                <td th:text="${message.status}"></td>
+
+                <td class="action-cell">
+
+                    <form th:if="${message.status == 'OPEN'}"
+                          th:action="@{/admin/messages/resolve/{id}(id=${message.id})}"
+                          method="post">
+
+                        <button type="submit"
+                                class="btn small-btn primary-btn">
+                            Mark Resolved
+                        </button>
+
+                    </form>
+
+                    <span th:if="${message.status == 'RESOLVED'}">
+                        Resolved
+                    </span>
+
+                </td>
+
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(messages)}">
+                <td colspan="6" class="empty-state">
+                    No contact messages found.
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

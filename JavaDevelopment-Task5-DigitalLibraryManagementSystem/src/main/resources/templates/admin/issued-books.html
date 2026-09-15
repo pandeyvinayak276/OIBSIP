@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Issued Books - Crosq Library</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <div class="page-header">
+        <div>
+            <h1>Issued Books</h1>
+            <p>View all currently issued books and due dates.</p>
+        </div>
+
+        <a href="/admin/dashboard" class="btn secondary-btn">
+            Back to Dashboard
+        </a>
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+            <tr>
+                <th>User</th>
+                <th>Username</th>
+                <th>Book</th>
+                <th>Issue Date</th>
+                <th>Due Date</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="issue : ${issues}">
+
+                <td th:text="${issue.user.fullName}"></td>
+
+                <td th:text="${issue.user.username}"></td>
+
+                <td th:text="${issue.book.title}"></td>
+
+                <td th:text="${issue.issueDate}"></td>
+
+                <td th:text="${issue.dueDate}"></td>
+
+                <td th:text="${issue.status}"></td>
+
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(issues)}">
+                <td colspan="6" class="empty-state">
+                    No books are currently issued.
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>
