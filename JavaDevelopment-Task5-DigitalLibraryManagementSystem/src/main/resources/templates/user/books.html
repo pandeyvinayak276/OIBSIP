@@ -130,11 +130,15 @@
 
             </form>
 
-            <button type="button"
-                    disabled
-                    th:unless="${book.availableQuantity > 0}">
-                Currently Unavailable
-            </button>
+            <form th:if="${book.availableQuantity == 0}"
+                  th:action="@{/user/books/reserve/{id}(id=${book.id})}"
+                  method="post">
+
+                <button type="submit" class="btn secondary-btn">
+                    Reserve Book
+                </button>
+
+            </form>
 
         </div>
 

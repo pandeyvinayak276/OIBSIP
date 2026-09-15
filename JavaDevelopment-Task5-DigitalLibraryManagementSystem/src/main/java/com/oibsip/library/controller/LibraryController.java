@@ -4,6 +4,7 @@ import com.oibsip.library.model.Book;
 import com.oibsip.library.model.user;
 import com.oibsip.library.service.BookService;
 import com.oibsip.library.service.IssueService;
+import com.oibsip.library.service.ReservationService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,11 +23,14 @@ public class LibraryController {
 
     private final BookService bookService;
     private final IssueService issueService;
+    private final ReservationService reservationService;
 
     public LibraryController(BookService bookService,
-                             IssueService issueService) {
+                             IssueService issueService,
+                             ReservationService reservationService) {
         this.bookService = bookService;
         this.issueService = issueService;
+        this.reservationService = reservationService;
     }
 
     @GetMapping
@@ -125,5 +129,44 @@ public class LibraryController {
         issueService.returnBook(user, issueId);
 
         return "redirect:/user/books/my-books";
+    }
+    @PostMapping("/reserve/{bookId}")
+    public String reserveBook(@PathVariable Long bookId,
+                              HttpSession session) {
+
+        user user = (user) session.getAttribute("loggedInUser");
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        if (!"USER".equals(user.getRole())) {
+            return "redirect:/admin/dashboard";
+        }
+
+        reservationService.reserveBook(user, bookId);
+
+        return "redirect:/user/books";
+    }
+    @GetMapping("/reservations")
+    public String reservations(HttpSession session, Model model) {
+
+        user user = (user) session.getAttribute("loggedInUser");
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        if (!"USER".equals(user.getRole())) {
+            return "redirect:/admin/dashboard";
+        }
+
+        model.addAttribute("user", user);
+        model.addAttribute(
+                "reservations",
+                reservationService.getUserReservations(user)
+        );
+
+        return "user/reservations";
     }
 }
