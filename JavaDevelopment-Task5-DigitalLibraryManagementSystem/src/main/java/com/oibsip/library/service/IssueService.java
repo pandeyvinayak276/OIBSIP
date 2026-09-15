@@ -5,6 +5,7 @@ import com.oibsip.library.model.Issue;
 import com.oibsip.library.model.user;
 import com.oibsip.library.repository.BookRepository;
 import com.oibsip.library.repository.IssueRepository;
+import com.oibsip.library.service.FineService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,11 +18,14 @@ public class IssueService {
 
     private final IssueRepository issueRepository;
     private final BookRepository bookRepository;
+    private final FineService fineService;
 
     public IssueService(IssueRepository issueRepository,
-                        BookRepository bookRepository) {
+                        BookRepository bookRepository,
+                        FineService fineService) {
         this.issueRepository = issueRepository;
         this.bookRepository = bookRepository;
+        this.fineService = fineService;
     }
 
     public boolean issueBook(user user, Long bookId) {
@@ -73,6 +77,8 @@ public class IssueService {
 
         issue.setReturnDate(LocalDate.now());
         issue.setStatus("RETURNED");
+        issueRepository.save(issue);
+        fineService.calculateFine(issue);
 
         Book book = issue.getBook();
         book.setAvailableQuantity(book.getAvailableQuantity() + 1);
