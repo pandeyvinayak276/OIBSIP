@@ -3,15 +3,19 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Members - Crosq Library</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LibraNest Library - Members</title>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div class="page-container">
+<div class="page-container admin-members-page">
 
     <div class="page-header">
+
         <div>
             <h1>Registered Members</h1>
             <p>View all registered library accounts.</p>
@@ -20,16 +24,17 @@
         <a href="/admin/dashboard" class="btn secondary-btn">
             Back to Dashboard
         </a>
+
     </div>
 
-    <div class="table-container">
+    <div class="admin-members-table-container">
 
-        <table>
+        <table class="admin-members-table">
 
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Full Name</th>
+                <th>Member</th>
                 <th>Username</th>
                 <th>Role</th>
                 <th>Registered On</th>
@@ -40,21 +45,40 @@
 
             <tr th:each="member : ${users}">
 
-                <td th:text="${member.id}"></td>
+                <td class="member-id"
+                    th:text="${member.id}">
+                    1
+                </td>
 
-                <td th:text="${member.fullName}"></td>
+                <td class="member-name"
+                    th:text="${member.fullName}">
+                    Member Name
+                </td>
 
-                <td th:text="${member.username}"></td>
+                <td class="member-username"
+                    th:text="${member.username}">
+                    username
+                </td>
 
-                <td th:text="${member.role}"></td>
+                <td>
+                    <span class="member-role"
+                          th:classappend="${member.role == 'ADMIN'} ? 'admin' : 'user'"
+                          th:text="${member.role}">
+                        USER
+                    </span>
+                </td>
 
-                <td th:text="${member.createdAt}"></td>
+                <td class="member-date"
+                    th:text="${member.createdAt}">
+                    2026-09-15
+                </td>
 
             </tr>
 
             <tr th:if="${#lists.isEmpty(users)}">
-                <td colspan="5" class="empty-state">
-                    No registered members found.
+                <td colspan="5" class="members-empty">
+                    <strong>No registered members found.</strong>
+                    <span>Registered library accounts will appear here.</span>
                 </td>
             </tr>
 

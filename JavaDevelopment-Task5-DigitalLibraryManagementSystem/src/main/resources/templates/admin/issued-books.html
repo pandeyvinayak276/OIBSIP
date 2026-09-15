@@ -3,15 +3,19 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Issued Books - Crosq Library</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LibraNest Library - Issued Books</title>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div class="page-container">
+<div class="page-container admin-issued-page">
 
     <div class="page-header">
+
         <div>
             <h1>Issued Books</h1>
             <p>View all currently issued books and due dates.</p>
@@ -20,11 +24,12 @@
         <a href="/admin/dashboard" class="btn secondary-btn">
             Back to Dashboard
         </a>
+
     </div>
 
-    <div class="table-container">
+    <div class="admin-issued-table-container">
 
-        <table>
+        <table class="admin-issued-table">
 
             <thead>
             <tr>
@@ -41,23 +46,44 @@
 
             <tr th:each="issue : ${issues}">
 
-                <td th:text="${issue.user.fullName}"></td>
+                <td class="issued-user"
+                    th:text="${issue.user.fullName}">
+                    User Name
+                </td>
 
-                <td th:text="${issue.user.username}"></td>
+                <td class="issued-username"
+                    th:text="${issue.user.username}">
+                    username
+                </td>
 
-                <td th:text="${issue.book.title}"></td>
+                <td class="issued-book"
+                    th:text="${issue.book.title}">
+                    Book Title
+                </td>
 
-                <td th:text="${issue.issueDate}"></td>
+                <td th:text="${issue.issueDate}">
+                    2026-09-15
+                </td>
 
-                <td th:text="${issue.dueDate}"></td>
+                <td class="issued-due-date"
+                    th:text="${issue.dueDate}">
+                    2026-09-29
+                </td>
 
-                <td th:text="${issue.status}"></td>
+                <td>
+                    <span class="issue-status"
+                          th:classappend="${issue.status == 'ISSUED'} ? 'active' : 'returned'"
+                          th:text="${issue.status}">
+                        ISSUED
+                    </span>
+                </td>
 
             </tr>
 
             <tr th:if="${#lists.isEmpty(issues)}">
-                <td colspan="6" class="empty-state">
-                    No books are currently issued.
+                <td colspan="6" class="issued-empty">
+                    <strong>No books are currently issued.</strong>
+                    <span>Issued books will appear here when users borrow books.</span>
                 </td>
             </tr>
 

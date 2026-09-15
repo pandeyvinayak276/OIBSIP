@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Add Book - Digital Library</title>
+    <title>LibraNest Library - Add Book</title>
 
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
-<div class="auth-container">
+<div class="auth-container admin-form-page">
 
     <div class="auth-card">
 
@@ -21,46 +21,55 @@
             Add a book to the library catalogue
         </p>
 
-        <div th:if="${error}" class="error-message"
+        <div th:if="${error}"
+             class="error-message"
              th:text="${error}">
             Error message
         </div>
 
         <form action="/admin/books/add" method="post">
 
-            <input type="text"
+            <label for="title">Book Title</label>
+            <input id="title"
+                   type="text"
                    name="title"
-                   placeholder="Book Title"
+                   placeholder="Enter book title"
                    required>
 
-            <input type="text"
+            <label for="author">Author</label>
+            <input id="author"
+                   type="text"
                    name="author"
-                   placeholder="Author"
+                   placeholder="Enter author name"
                    required>
 
-            <input type="text"
+            <label for="isbn">ISBN</label>
+            <input id="isbn"
+                   type="text"
                    name="isbn"
-                   placeholder="ISBN"
+                   placeholder="Enter ISBN"
                    required>
 
-            <input type="text"
+            <label for="category">Category</label>
+            <input id="category"
+                   type="text"
                    name="category"
-                   placeholder="Category"
+                   placeholder="Enter category"
                    required>
 
-            <input type="number"
+            <label for="totalQuantity">Total Quantity</label>
+            <input id="totalQuantity"
+                   type="number"
                    name="totalQuantity"
-                   placeholder="Total Quantity"
+                   placeholder="Enter quantity"
                    min="1"
                    required>
 
-            <button type="submit">
+            <button type="submit" class="btn primary-btn">
                 Add Book
             </button>
 
         </form>
-
-        <br>
 
         <a href="/admin/books" class="btn secondary-btn">
             Back to Books

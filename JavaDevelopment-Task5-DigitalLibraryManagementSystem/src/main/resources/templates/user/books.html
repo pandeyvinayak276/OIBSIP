@@ -5,15 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Browse Books - Digital Library</title>
+    <title>LibraNest Library - Browse Books</title>
 
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
-<div class="page-container">
+<div class="page-container library-page">
 
+    <!-- Page Header -->
     <div class="page-header">
 
         <div>
@@ -25,45 +26,69 @@
             </p>
         </div>
 
-        <div>
-            <a href="/user/dashboard" class="btn secondary-btn">
+        <div class="header-actions">
+
+            <a href="/user/dashboard" class="btn library-dashboard-btn">
                 Dashboard
             </a>
 
-            <a href="/logout" class="btn secondary-btn">
+            <a href="/logout" class="btn library-logout-btn">
                 Logout
             </a>
+
         </div>
 
     </div>
 
 
-    <!-- Search and Category Filter -->
+    <!-- Search & Filter -->
+    <div class="search-panel modern-search-panel">
 
-    <div class="search-panel">
+        <form action="/user/books"
+              method="get"
+              class="book-search-form">
 
-        <form action="/user/books" method="get">
+            <div class="search-field">
 
-            <input type="text"
-                   name="keyword"
-                   placeholder="Search by title or author"
-                   th:value="${keyword}">
+                <label for="keyword">
+                    Search Books
+                </label>
 
-            <select name="category">
+                <input type="text"
+                       id="keyword"
+                       name="keyword"
+                       placeholder="Search by title or author"
+                       th:value="${keyword}">
 
-                <option value="">
-                    All Categories
-                </option>
+            </div>
 
-                <option th:each="cat : ${categories}"
-                        th:value="${cat}"
-                        th:text="${cat}"
-                        th:selected="${cat == selectedCategory}">
-                </option>
 
-            </select>
+            <div class="category-field">
 
-            <button type="submit">
+                <label for="category">
+                    Category
+                </label>
+
+                <select id="category"
+                        name="category">
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat}"
+                            th:text="${cat}"
+                            th:selected="${cat == selectedCategory}">
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button type="submit"
+                    class="btn primary-btn search-btn">
                 Search
             </button>
 
@@ -72,9 +97,9 @@
     </div>
 
 
-    <!-- Book Catalogue -->
-
-    <div th:if="${#lists.isEmpty(books)}" class="empty-state">
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(books)}"
+         class="empty-state">
 
         <h3>No books found</h3>
 
@@ -85,56 +110,95 @@
     </div>
 
 
+    <!-- Book Catalogue -->
     <div th:unless="${#lists.isEmpty(books)}"
          class="book-grid">
 
         <div class="book-card"
              th:each="book : ${books}">
 
-            <h2 th:text="${book.title}">
-                Book Title
-            </h2>
+            <div class="book-card-header">
 
-            <p>
-                <strong>Author:</strong>
-                <span th:text="${book.author}">Author</span>
-            </p>
+                <div>
+                    <h2 th:text="${book.title}">
+                        Book Title
+                    </h2>
 
-            <p>
-                <strong>ISBN:</strong>
-                <span th:text="${book.isbn}">ISBN</span>
-            </p>
+                    <p class="book-author">
+                        by
+                        <span th:text="${book.author}">
+                            Author
+                        </span>
+                    </p>
+                </div>
 
-            <p>
-                <strong>Category:</strong>
-                <span th:text="${book.category}">Category</span>
-            </p>
+                <span class="category-badge"
+                      th:text="${book.category}">
+                    Category
+                </span>
 
-            <p>
-                <strong>Total Copies:</strong>
-                <span th:text="${book.totalQuantity}">5</span>
-            </p>
+            </div>
 
-            <p>
-                <strong>Available:</strong>
-                <span th:text="${book.availableQuantity}">5</span>
-            </p>
 
+            <div class="book-details">
+
+                <div class="book-detail">
+                    <span class="detail-label">ISBN</span>
+                    <span class="detail-value"
+                          th:text="${book.isbn}">
+                        ISBN
+                    </span>
+                </div>
+
+                <div class="book-detail">
+                    <span class="detail-label">Total Copies</span>
+                    <span class="detail-value"
+                          th:text="${book.totalQuantity}">
+                        5
+                    </span>
+                </div>
+
+                <div class="book-detail">
+                    <span class="detail-label">Available</span>
+
+                    <span class="availability-badge available-badge"
+                          th:if="${book.availableQuantity > 0}"
+                          th:text="${book.availableQuantity + ' available'}">
+                        5 available
+                    </span>
+
+                    <span class="availability-badge unavailable-badge"
+                          th:if="${book.availableQuantity == 0}">
+                        Currently unavailable
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Issue Book -->
             <form th:action="@{/user/books/issue/{id}(id=${book.id})}"
                   method="post"
-                  th:if="${book.availableQuantity > 0}">
+                  th:if="${book.availableQuantity > 0}"
+                  class="book-action-form">
 
-                <button type="submit">
+                <button type="submit"
+                        class="btn primary-btn modern-action-btn">
                     Issue Book
                 </button>
 
             </form>
 
+
+            <!-- Reserve Book -->
             <form th:if="${book.availableQuantity == 0}"
                   th:action="@{/user/books/reserve/{id}(id=${book.id})}"
-                  method="post">
+                  method="post"
+                  class="book-action-form">
 
-                <button type="submit" class="btn secondary-btn">
+                <button type="submit"
+                        class="btn secondary-btn modern-action-btn">
                     Reserve Book
                 </button>
 

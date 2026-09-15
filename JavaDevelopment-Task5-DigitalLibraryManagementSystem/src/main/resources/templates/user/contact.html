@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Contact Library - Crosq</title>
+    <title>LibraNest Library - Contact</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div class="page-container">
+<div class="page-container contact-page">
 
     <div class="page-header">
         <div>
@@ -17,7 +17,7 @@
             <p>Send us your questions or queries.</p>
         </div>
 
-        <a href="/user/dashboard" class="btn secondary-btn">
+        <a href="/user/dashboard" class="btn contact-dashboard-btn">
             Back to Dashboard
         </a>
     </div>
@@ -32,7 +32,9 @@
              th:text="${error}">
         </div>
 
-        <form action="/user/contact" method="post">
+        <form action="/user/contact"
+              method="post"
+              class="contact-form">
 
             <label for="subject">Subject</label>
 
@@ -84,7 +86,9 @@
                     <td th:text="${message.createdAt}"></td>
 
                     <td>
-                        <span th:text="${message.status}"></span>
+                        <span th:text="${message.status}"
+                            th:classappend="${message.status == 'RESOLVED'} ? ' query-status-resolved' : ' query-status-open'">
+                        </span>
                     </td>
 
                 </tr>

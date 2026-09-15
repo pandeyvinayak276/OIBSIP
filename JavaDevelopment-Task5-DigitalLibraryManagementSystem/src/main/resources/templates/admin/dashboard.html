@@ -1,67 +1,56 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibraNest Library - Admin Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #f4f7fb; color: #1f2937; }
+        .auth-container { min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .auth-card { width: 100%; max-width: 420px; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; }
+        .auth-card h1.admin-title { text-align: center; margin-bottom: 8px; font-size: 26px; color: #0f766e; }
+        .subtitle { text-align: center; color: #64748b; margin-bottom: 24px; font-size: 14px; }
+        .user-details { background: #f8fafc; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; color: #475569; border: 1px solid #e2e8f0; line-height: 1.6; }
 
-    <title>Digital Library - Admin Dashboard</title>
-
-    <link rel="stylesheet" href="/css/style.css">
+        .admin-link {
+            display: block !important;
+            width: 100% !important;
+            padding: 12px 14px !important;
+            border-radius: 8px !important;
+            text-decoration: none !important;
+            text-align: center !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            margin-bottom: 12px !important;
+            transition: all 0.2s ease-in-out;
+        }
+        .primary-link { background: #2563eb !important; color: #ffffff !important; }
+        .primary-link:hover { background: #1d4ed8 !important; }
+        .secondary-link { background: #f1f5f9 !important; color: #475569 !important; margin-top: 8px !important; margin-bottom: 0 !important; }
+        .secondary-link:hover { background: #e2e8f0 !important; }
+    </style>
 </head>
-
 <body>
 
 <div class="auth-container">
-
     <div class="auth-card">
+        <h1 class="admin-title">Admin Dashboard</h1>
+        <p class="subtitle">Welcome to the LibraNest Library Management Panel</p>
 
-        <h1>Admin Dashboard</h1>
+        <div class="user-details">
+            <p>Welcome, <strong th:text="${user.fullName}">Administrator</strong></p>
+            <p>Logged in as: <strong th:text="${user.role}">ADMIN</strong></p>
+        </div>
 
-        <p class="subtitle">
-            Welcome, <strong th:text="${user.fullName}">Administrator</strong>
-        </p>
 
-        <p>
-            You are logged in as:
-            <strong th:text="${user.role}">ADMIN</strong>
-        </p>
-
-        <br>
-
-        <a href="/admin/books" class="btn primary-btn admin-btn">
-            Manage Books
-        </a>
-
-        <br>
-        <a href="/admin/issued-books"
-           class="btn primary-btn admin-btn">
-            Issued Books
-        </a>
-
-        <a href="/admin/users"
-           class="btn primary-btn admin-btn">
-            Registered Members
-        </a>
-
-        <br>
-
-        <a href="/admin/fines" class="btn primary-btn admin-btn">
-            Manage Fines
-        </a>
-
-        <a href="/admin/messages"
-           class="btn primary-btn admin-btn">
-            Contact Messages
-        </a>
-
-        <br><br>
-
-        <a href="/logout" class="btn secondary-btn admin-btn">
-            Logout
-        </a>
-
+        <a href="/admin/books" class="admin-link primary-link">Manage Books</a>
+        <a href="/admin/issued-books" class="admin-link primary-link">Issued Books</a>
+        <a href="/admin/users" class="admin-link primary-link">Registered Members</a>
+        <a href="/admin/fines" class="admin-link primary-link">Manage Fines</a>
+        <a href="/admin/messages" class="admin-link primary-link">Contact Messages</a>
+        <a href="/logout" class="admin-link secondary-link">Logout</a>
     </div>
-
 </div>
 
 </body>

@@ -12,7 +12,7 @@ public class Fine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "issue_id", nullable = false)
     private Issue issue;
 

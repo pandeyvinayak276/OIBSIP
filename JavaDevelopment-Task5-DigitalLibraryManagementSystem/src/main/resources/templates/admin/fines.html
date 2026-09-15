@@ -3,15 +3,19 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Fine Management - Crosq Library</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LibraNest Library - Fine Management</title>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div class="page-container">
+<div class="page-container admin-fines-page">
 
     <div class="page-header">
+
         <div>
             <h1>Fine Management</h1>
             <p>View and manage library fines.</p>
@@ -20,11 +24,12 @@
         <a href="/admin/dashboard" class="btn secondary-btn">
             Back to Dashboard
         </a>
+
     </div>
 
-    <div class="table-container">
+    <div class="admin-fines-table-container">
 
-        <table>
+        <table class="admin-fines-table">
 
             <thead>
             <tr>
@@ -43,36 +48,58 @@
 
             <tr th:each="fine : ${fines}">
 
-                <td th:text="${fine.id}"></td>
-
-                <td th:text="${fine.issue.user.fullName}"></td>
-
-                <td th:text="${fine.issue.book.title}"></td>
-
-                <td th:text="${fine.issue.dueDate}"></td>
-
-                <td th:text="${fine.issue.returnDate}"></td>
-
-                <td>
-                    ₹<span th:text="${fine.amount}"></span>
+                <td class="fine-id"
+                    th:text="${fine.id}">
+                    1
                 </td>
 
-                <td th:text="${fine.status}"></td>
+                <td class="fine-user"
+                    th:text="${fine.issue.user.fullName}">
+                    User Name
+                </td>
 
-                <td class="action-cell">
+                <td class="fine-book"
+                    th:text="${fine.issue.book.title}">
+                    Book Title
+                </td>
+
+                <td th:text="${fine.issue.dueDate}">
+                    2026-09-15
+                </td>
+
+                <td th:text="${fine.issue.returnDate}">
+                    2026-09-20
+                </td>
+
+                <td class="fine-amount">
+                    ₹<span th:text="${fine.amount}">25</span>
+                </td>
+
+                <td>
+
+                    <span class="fine-status"
+                          th:classappend="${fine.status == 'PAID'} ? 'paid' : 'unpaid'"
+                          th:text="${fine.status}">
+                        UNPAID
+                    </span>
+
+                </td>
+
+                <td class="fine-action">
 
                     <form th:if="${fine.status == 'UNPAID'}"
                           th:action="@{/admin/fines/pay/{id}(id=${fine.id})}"
                           method="post">
 
                         <button type="submit"
-                                class="btn small-btn primary-btn">
+                                class="fine-pay-btn">
                             Mark as Paid
                         </button>
 
                     </form>
 
-                    <span th:if="${fine.status == 'PAID'}">
+                    <span th:if="${fine.status == 'PAID'}"
+                          class="fine-paid-label">
                         Paid
                     </span>
 
@@ -81,9 +108,17 @@
             </tr>
 
             <tr th:if="${#lists.isEmpty(fines)}">
-                <td colspan="8" class="empty-state">
-                    No fines found.
+
+                <td colspan="8" class="fines-empty">
+
+                    <strong>No fines found.</strong>
+
+                    <span>
+                        Library fines will appear here when applicable.
+                    </span>
+
                 </td>
+
             </tr>
 
             </tbody>

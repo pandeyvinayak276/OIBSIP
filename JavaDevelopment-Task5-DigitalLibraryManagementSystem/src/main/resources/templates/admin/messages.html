@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Contact Messages - Crosq Library</title>
+    <title>LibraNest Library - Contact Messages </title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div class="page-container">
+<div class="page-container admin-messages-page">
 
     <div class="page-header">
         <div>
@@ -22,9 +22,9 @@
         </a>
     </div>
 
-    <div class="table-container">
+    <div class="table-container admin-messages-table-container">
 
-        <table>
+        <table class="admin-messages-table">
 
             <thead>
             <tr>
@@ -41,15 +41,33 @@
 
             <tr th:each="message : ${messages}">
 
-                <td th:text="${message.user.fullName}"></td>
+                <td class="message-user"
+                    th:text="${message.user.fullName}">
+                    User Name
+                </td>
 
-                <td th:text="${message.subject}"></td>
+                <td class="message-subject"
+                    th:text="${message.subject}">
+                    Subject
+                </td>
 
-                <td th:text="${message.message}"></td>
+                <td class="message-content"
+                    th:text="${message.message}">
+                    Message content
+                </td>
 
-                <td th:text="${message.createdAt}"></td>
+                <td class="message-date"
+                    th:text="${message.createdAt}">
+                    Date
+                </td>
 
-                <td th:text="${message.status}"></td>
+                <td>
+                    <span class="message-status"
+                          th:classappend="${message.status == 'RESOLVED'} ? 'resolved' : 'open'"
+                          th:text="${message.status}">
+                        OPEN
+                    </span>
+                </td>
 
                 <td class="action-cell">
 
@@ -58,13 +76,14 @@
                           method="post">
 
                         <button type="submit"
-                                class="btn small-btn primary-btn">
+                                class="btn small-btn primary-btn message-resolve-btn">
                             Mark Resolved
                         </button>
 
                     </form>
 
-                    <span th:if="${message.status == 'RESOLVED'}">
+                    <span th:if="${message.status == 'RESOLVED'}"
+                          class="message-resolved-text">
                         Resolved
                     </span>
 

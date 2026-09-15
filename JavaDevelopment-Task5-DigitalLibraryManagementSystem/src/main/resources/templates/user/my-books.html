@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>My Books - Digital Library</title>
+    <title>LibraNest Library - My Books</title>
 
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
-<div class="page-container">
+<div class="page-container my-books-page">
 
     <div class="page-header">
 
@@ -25,14 +25,16 @@
             </p>
         </div>
 
-        <div>
-            <a href="/user/dashboard" class="btn secondary-btn">
+        <div class="my-books-header-actions">
+
+            <a href="/user/dashboard" class="btn my-books-dashboard-btn">
                 Dashboard
             </a>
 
-            <a href="/user/books" class="btn primary-btn">
+            <a href="/user/books" class="btn my-books-browse-btn">
                 Browse Books
             </a>
+
         </div>
 
     </div>
@@ -111,13 +113,14 @@
                           th:action="@{/user/books/return/{id}(id=${issue.id})}"
                           method="post">
 
-                        <button type="submit">
+                        <button type="submit" class="btn my-books-return-btn">
                             Return Book
                         </button>
 
                     </form>
 
-                    <span th:unless="${issue.status == 'ISSUED'}">
+                    <span th:unless="${issue.status == 'ISSUED'}"
+                          class="returned-label">
                         Returned
                     </span>
 

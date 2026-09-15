@@ -3,62 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibraNest Library - Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #f4f7fb; color: #1f2937; }
+        .auth-container { min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .auth-card { width: 100%; max-width: 420px; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; }
+        .auth-card h1 { text-align: center; margin-bottom: 8px; font-size: 26px; color: #1e3a8a; }
+        .subtitle { text-align: center; color: #64748b; margin-bottom: 24px; font-size: 14px; }
+        .user-details { background: #f8fafc; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; color: #475569; border: 1px solid #e2e8f0; line-height: 1.6; }
 
-    <title>Digital Library - Dashboard</title>
 
-    <link rel="stylesheet" href="/css/style.css">
+        .dashboard-link {
+            display: block !important;
+            width: 100% !important;
+            padding: 12px 14px !important;
+            border-radius: 8px !important;
+            text-decoration: none !important;
+            text-align: center !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            margin-bottom: 12px !important;
+            transition: all 0.2s ease-in-out;
+        }
+        .primary-link { background: #2563eb !important; color: #ffffff !important; }
+        .primary-link:hover { background: #1d4ed8 !important; }
+        .danger-link { background: #ef4444 !important; color: #ffffff !important; margin-top: 8px !important; margin-bottom: 0 !important; }
+        .danger-link:hover { background: #dc2626 !important; }
+    </style>
 </head>
-
 <body>
 
 <div class="auth-container">
-
     <div class="auth-card">
-
         <h1>Welcome, <span th:text="${user.fullName}">User</span>!</h1>
+        <p class="subtitle">Welcome to the LibraNest Library Management System</p>
 
-        <p class="subtitle">
-            Welcome to the Digital Library Management System
-        </p>
+        <div class="user-details">
+            <p>Username: <strong th:text="${user.username}">username</strong></p>
+            <p>Role: <strong th:text="${user.role}">USER</strong></p>
+        </div>
 
-        <p>
-            Username:
-            <strong th:text="${user.username}">username</strong>
-        </p>
-
-        <p>
-            Role:
-            <strong th:text="${user.role}">USER</strong>
-        </p>
-
-        <a href="/user/books" class="btn primary-btn dashboard-btn">
-            Browse Books
-        </a>
-
-        <a href="/user/books/my-books"
-           class="btn primary-btn dashboard-btn">
-            My Books
-        </a>
-
-        <a href="/user/books/reservations"
-           class="btn primary-btn dashboard-btn">
-            My Reservations
-        </a>
-
-        <a href="/user/contact"
-           class="btn primary-btn dashboard-btn">
-            Contact Library
-        </a>
-
-
-        <br>
-
-        <a href="/logout">
-            <button type="button">Logout</button>
-        </a>
-
+        <a href="/user/books" class="dashboard-link primary-link">Browse Books</a>
+        <a href="/user/books/my-books" class="dashboard-link primary-link">My Books</a>
+        <a href="/user/books/reservations" class="dashboard-link primary-link">My Reservations</a>
+        <a href="/user/contact" class="dashboard-link primary-link">Contact Library</a>
+        <a href="/logout" class="dashboard-link danger-link">Logout</a>
     </div>
-
 </div>
 
 </body>
